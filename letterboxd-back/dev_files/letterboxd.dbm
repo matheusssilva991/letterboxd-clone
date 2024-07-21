@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.1.3" use-changelog="false" max-obj-count="10"
+	 last-position="0,0" last-zoom="0.85"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" name-color="#000000" sql-disabled="true">
+</schema>
+
+<table name="filme" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="600" y="320"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="nome" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="sinopse" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="duracao" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="data_lancamento" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="caminho_imagem" not-null="true">
+		<type name="varchar" length="0"/>
+	</column>
+	<constraint name="filme_pk" type="pk-constr" table="public.filme">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="genero" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="80" y="660"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="nome" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<constraint name="genero_pk" type="pk-constr" table="public.genero">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="diretor" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="80" y="60"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="nome" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="descricao" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="diretor_pk" type="pk-constr" table="public.diretor">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="filme_diretor" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="620" y="40"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<constraint name="filme_diretor_pk" type="pk-constr" table="public.filme_diretor">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="filme_has_many_filme_diretor" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#0f328d"
+	 src-table="public.filme"
+	 dst-table="public.filme_diretor"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="diretor_has_many_filme_diretor" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#11ef03"
+	 src-table="public.diretor"
+	 dst-table="public.filme_diretor"
+	 src-required="false" dst-required="false"/>
+
+<table name="filme_genero" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="60" y="320"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<constraint name="filme_genero_pk" type="pk-constr" table="public.filme_genero">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="filme_has_many_filme_genero" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#a017a9"
+	 src-table="public.filme"
+	 dst-table="public.filme_genero"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="genero_has_many_filme_genero" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#8884c5"
+	 src-table="public.genero"
+	 dst-table="public.filme_genero"
+	 src-required="false" dst-required="false"/>
+
+<table name="ator" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1140" y="40"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="nome" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="descricao" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="ator_pk" type="pk-constr" table="public.ator">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="filme_ator" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1140" y="340"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<constraint name="filme_ator_pk" type="pk-constr" table="public.filme_ator">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="filme_has_many_filme_ator" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#2f061a"
+	 src-table="public.filme"
+	 dst-table="public.filme_ator"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="ator_has_many_filme_ator" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#4a59f4"
+	 src-table="public.ator"
+	 dst-table="public.filme_ator"
+	 src-required="false" dst-required="false"/>
+
+<table name="filme_critica" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="640" y="620"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="nro_estrelas" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="comentario" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="critica_pk" type="pk-constr" table="public.filme_critica">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="filme_has_many_filme_critica" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#13de67"
+	 src-table="public.filme"
+	 dst-table="public.filme_critica"
+	 src-required="false" dst-required="false"/>
+
+<table name="usuario" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="1160" y="640"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="nome">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="username" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="senha" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<constraint name="usuario_pk" type="pk-constr" table="public.usuario">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<relationship name="usuario_has_many_filme_critica" type="rel1n" layers="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#7d5421"
+	 src-table="public.usuario"
+	 dst-table="public.filme_critica"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
