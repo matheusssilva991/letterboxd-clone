@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "69efa268-cba7-4cf6-b407-d4f1b0e8ab7a",
+		"name": "Letterboxd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "21539221"
+	},
+	"item": [
+		{
+			"name": "Genre",
+			"item": [
+				{
+					"name": "GENRES",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GENRE / ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/genre/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genre",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GENRE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Comédia2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/genre",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GENRE / ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Drama",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/genre/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genre",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GENRE / ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/genre/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genre",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
