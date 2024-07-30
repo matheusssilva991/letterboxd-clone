@@ -5,6 +5,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GenreModule } from './modules/genre/genre.module';
 import { ActorModule } from './modules/actor/actor.module';
+import { MovieModule } from './modules/movie/movie.module';
+import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
 
 @Module({
   imports: [
@@ -28,6 +30,8 @@ import { ActorModule } from './modules/actor/actor.module';
     }),
     GenreModule,
     ActorModule,
+    MovieModule,
+    MovieGenreModule,
   ],
   controllers: [AppController],
   providers: [AppService],

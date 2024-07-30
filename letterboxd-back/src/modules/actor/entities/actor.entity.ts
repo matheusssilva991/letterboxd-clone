@@ -22,7 +22,7 @@ export class Actor {
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP(6)',
   })
-  createdAt?: Date;
+  createdAt: Date;
 
   // data de quanto foi atualizado
   @UpdateDateColumn({
@@ -30,5 +30,5 @@ export class Actor {
     default: () => 'CURRENT_TIMESTAMP(6)',
     onUpdate: 'CURRENT_TIMESTAMP(6)',
   })
-  updatedAt?: Date;
+  updatedAt: Date;
 }

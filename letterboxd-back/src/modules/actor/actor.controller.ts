@@ -14,7 +14,7 @@ import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
 import { Actor } from './entities/actor.entity';
 
-@Controller()
+@Controller('api')
 export class ActorController {
   constructor(private readonly actorService: ActorService) {}
 

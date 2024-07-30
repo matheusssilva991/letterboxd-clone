@@ -236,6 +236,277 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Movie Genre",
+			"item": [
+				{
+					"name": "MOVIE-GENRES",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie-genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-GENRE / ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie-genre/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-genre",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-GENRE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "movieId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "genreId",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movie-genre",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-genre"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-GENRE / ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "movieId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "genreId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movie-genre/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-genre",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-GENRE / ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie-genre/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-genre",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie",
+			"item": [
+				{
+					"name": "MOVIES",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE / ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Vingadores",
+									"type": "text"
+								},
+								{
+									"key": "synopsis",
+									"value": "Filme de herói genérico.",
+									"type": "text"
+								},
+								{
+									"key": "releaseDate",
+									"value": "2010-08-23",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "150",
+									"type": "text"
+								},
+								{
+									"key": "imagePath",
+									"value": "teste",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movie",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE / ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Vingadores 2",
+									"type": "text"
+								},
+								{
+									"key": "releaseDate",
+									"value": "2012-08-23",
+									"type": "text"
+								},
+								{
+									"key": "duration",
+									"value": "190",
+									"type": "text"
+								},
+								{
+									"key": "synopsis",
+									"value": "Continuação de um filme genérico de herói.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movie/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE / ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -263,7 +534,7 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "http://localhost:3000",
+			"value": "http://localhost:3000/api",
 			"type": "string"
 		}
 	]
