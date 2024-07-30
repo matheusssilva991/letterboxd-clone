@@ -1,34 +1,48 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { ActorService } from './actor.service';
 import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
+import { Actor } from './entities/actor.entity';
 
 @Controller()
 export class ActorController {
   constructor(private readonly actorService: ActorService) {}
 
   @Post('actor')
-  create(@Body() createActorDto: CreateActorDto) {
+  async create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
     return this.actorService.create(createActorDto);
   }
 
   @Get('actors')
-  findAll() {
+  async findAll(): Promise<Actor[]> {
     return this.actorService.findAll();
   }
 
   @Get('actor/:id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Actor> {
     return this.actorService.findOne(+id);
   }
 
   @Patch('actor/:id')
-  update(@Param('id') id: string, @Body() updateActorDto: UpdateActorDto) {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateActorDto: UpdateActorDto,
+  ): Promise<UpdateResult> {
     return this.actorService.update(+id, updateActorDto);
   }
 
   @Delete('actor/:id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.actorService.remove(+id);
   }
 }

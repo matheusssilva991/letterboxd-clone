@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
@@ -16,7 +16,7 @@ export class GenreService {
     private readonly genreRepository: Repository<Genre>,
   ) {}
 
-  async create(createGenreDto: CreateGenreDto) {
+  async create(createGenreDto: CreateGenreDto): Promise<Genre> {
     if (await this.findByName(createGenreDto.name)) {
       throw new BadRequestException('Gênero já cadastrado.');
     }
@@ -24,11 +24,11 @@ export class GenreService {
     return this.genreRepository.save(createGenreDto);
   }
 
-  async findAll() {
+  async findAll(): Promise<Genre[]> {
     return this.genreRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<Genre> {
     try {
       return await this.genreRepository.findOneByOrFail({ id });
     } catch (error) {
@@ -36,7 +36,10 @@ export class GenreService {
     }
   }
 
-  async update(id: number, updateGenreDto: UpdateGenreDto) {
+  async update(
+    id: number,
+    updateGenreDto: UpdateGenreDto,
+  ): Promise<UpdateResult> {
     // verificar se o gênero existe antes de atualizar
     await this.findOne(id);
 
@@ -49,7 +52,7 @@ export class GenreService {
     return this.genreRepository.update(id, updateGenreDto);
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<DeleteResult> {
     // verificar se o gênero existe antes de deletar
     await this.findOne(id);
 
