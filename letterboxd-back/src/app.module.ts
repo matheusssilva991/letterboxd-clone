@@ -32,6 +32,7 @@ import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
     ActorModule,
     MovieModule,
     MovieGenreModule,
+    DirectorModule,
   ],
   controllers: [AppController],
   providers: [AppService],
