@@ -8,6 +8,7 @@ import { ActorModule } from './modules/actor/actor.module';
 import { DirectorModule } from './modules/director/director.module';
 import { GenreModule } from './modules/genre/genre.module';
 import { MovieModule } from './modules/movie/movie.module';
+import { MovieDirectorModule } from './modules/movie_director/movie_director.module';
 import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
 
 @Module({
@@ -34,6 +35,7 @@ import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
     ActorModule,
     MovieModule,
     MovieGenreModule,
+    MovieDirectorModule,
     DirectorModule,
   ],
   controllers: [AppController],

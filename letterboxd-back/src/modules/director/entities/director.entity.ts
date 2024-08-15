@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { MovieDirector } from '../../movie_director/entities/movie_genre.entity';
 
 @Entity({ name: 'director', orderBy: { id: 'ASC' } })
 export class Director {
@@ -16,6 +18,9 @@ export class Director {
 
   @Column({ name: 'description', type: 'text' })
   description: string;
+
+  @OneToMany(() => MovieDirector, (movieGenre) => movieGenre.director)
+  movieDirectors: MovieDirector[];
 
   @CreateDateColumn({
     type: 'timestamp',
