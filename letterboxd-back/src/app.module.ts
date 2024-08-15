@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GenreModule } from './modules/genre/genre.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { LoggingMiddleware } from './common/middlewares/logging.midleware';
 import { ActorModule } from './modules/actor/actor.module';
+import { DirectorModule } from './modules/director/director.module';
+import { GenreModule } from './modules/genre/genre.module';
 import { MovieModule } from './modules/movie/movie.module';
 import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
 
@@ -38,4 +40,8 @@ import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
   providers: [AppService],
   exports: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*');
+  }
+}

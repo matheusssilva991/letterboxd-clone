@@ -238,6 +238,124 @@
 			]
 		},
 		{
+			"name": "Director",
+			"item": [
+				{
+					"name": "DIRECTORS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/directors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DIRECTOR / ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/director/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"director",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DIRECTOR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Diretor Famoso",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Diretor Estaduniense famoso",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/director",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"director"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DIRECTOR / ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Diretor Famoso",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/director/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"director",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DIRECTOR / ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/director/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"director",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Movie Genre",
 			"item": [
 				{

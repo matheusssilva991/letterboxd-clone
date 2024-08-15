@@ -1,7 +1,7 @@
 import { IsEmpty, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateActorDto {
-  @IsString({ message: 'Informe um nome do ator ou atriz válido.' })
+  @IsString({ message: 'Informe um nome válido.' })
   @IsNotEmpty({ message: 'Informe um nome.' })
   name: string;
 

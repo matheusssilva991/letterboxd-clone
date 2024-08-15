@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'actor', orderBy: { id: 'ASC' } })
-export class Actor {
+@Entity({ name: 'director', orderBy: { id: 'ASC' } })
+export class Director {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
