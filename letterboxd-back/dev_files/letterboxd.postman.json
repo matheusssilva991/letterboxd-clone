@@ -479,6 +479,129 @@
 			]
 		},
 		{
+			"name": "Movie Actor",
+			"item": [
+				{
+					"name": "MOVIE-ACTORS",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie-actors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-ACTOR / ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie-actor/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-actor",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-ACTOR",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "movieId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "actorId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movie-actor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-actor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-ACTOR / ID",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "movieId",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "actorId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movie-actor/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-actor",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MOVIE-ACTOR / ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movie-actor/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movie-actor",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Movie Director",
 			"item": [
 				{

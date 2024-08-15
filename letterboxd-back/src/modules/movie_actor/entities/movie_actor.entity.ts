@@ -7,34 +7,33 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
+import { Actor } from '../../actor/entities/actor.entity';
 import { Movie } from '../../movie/entities/movie.entity';
-import { Director } from '../../director/entities/director.entity';
 
-@Entity({ name: 'movie_director', orderBy: { id: 'ASC' } })
-export class MovieDirector {
+@Entity({ name: 'movie_actor', orderBy: { id: 'ASC' } })
+export class MovieActor {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
   @Column({ name: 'movie_id', type: 'int', unsigned: true })
   movieId: number;
 
-  @Column({ name: 'director_id', type: 'int', unsigned: true })
-  directorId: number;
+  @Column({ name: 'actor_id', type: 'int', unsigned: true })
+  actorId: number;
 
-  @ManyToOne(() => Movie, (movie) => movie.movieGenres, {
+  @ManyToOne(() => Movie, (movie) => movie.movieActors, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'movie_id' })
   movie: Movie;
 
-  @ManyToOne(() => Director, (genre) => genre.movieDirectors, {
+  @ManyToOne(() => Actor, (actor) => actor.movieActors, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  @JoinColumn({ name: 'director_id' })
-  director: Director;
+  @JoinColumn({ name: 'actor_id' })
+  actor: Actor;
 
   @CreateDateColumn({
     type: 'timestamp',

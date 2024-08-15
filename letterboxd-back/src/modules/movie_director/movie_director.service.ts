@@ -9,7 +9,7 @@ import { MovieService } from '../movie/movie.service';
 import { DirectorService } from './../director/director.service';
 import { CreateMovieDirectorDto } from './dto/create-movie_director.dto';
 import { UpdateMovieDirectorDto } from './dto/update-movie_director.dto';
-import { MovieDirector } from './entities/movie_genre.entity';
+import { MovieDirector } from './entities/movie_director.entity';
 
 @Injectable()
 export class MovieDirectorService {

@@ -11,7 +11,7 @@ import {
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { CreateMovieDirectorDto } from './dto/create-movie_director.dto';
 import { UpdateMovieDirectorDto } from './dto/update-movie_director.dto';
-import { MovieDirector } from './entities/movie_genre.entity';
+import { MovieDirector } from './entities/movie_director.entity';
 import { MovieDirectorService } from './movie_director.service';
 
 @Controller('api')

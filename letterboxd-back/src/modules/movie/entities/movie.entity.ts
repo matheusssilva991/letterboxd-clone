@@ -6,6 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { MovieActor } from '../../movie_actor/entities/movie_actor.entity';
+import { MovieDirector } from '../../movie_director/entities/movie_director.entity';
 import { MovieGenre } from '../../movie_genre/entities/movie_genre.entity';
 
 @Entity({ name: 'movie', orderBy: { id: 'ASC' } })
@@ -30,6 +32,12 @@ export class Movie {
 
   @OneToMany(() => MovieGenre, (movieGenre) => movieGenre.movie)
   movieGenres: MovieGenre[];
+
+  @OneToMany(() => MovieDirector, (movieDirector) => movieDirector.movie)
+  movieDirectors: MovieDirector[];
+
+  @OneToMany(() => MovieActor, (movieActor) => movieActor.movie)
+  movieActors: MovieActor[];
 
   @CreateDateColumn({
     type: 'timestamp',

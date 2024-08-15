@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MovieDirector } from '../../movie_director/entities/movie_genre.entity';
+import { MovieDirector } from '../../movie_director/entities/movie_director.entity';
 
 @Entity({ name: 'director', orderBy: { id: 'ASC' } })
 export class Director {
