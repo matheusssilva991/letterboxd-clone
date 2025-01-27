@@ -5,46 +5,45 @@ import {
   Get,
   Param,
   ParseIntPipe,
-  Patch,
   Post,
 } from '@nestjs/common';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 import { CreateMovieActorDto } from './dto/create-movie_actor.dto';
-import { UpdateMovieActorDto } from './dto/update-movie_actor.dto';
 import { MovieActor } from './entities/movie_actor.entity';
 import { MovieActorService } from './movie_actor.service';
 
-@Controller({ version: '1', path: 'movie-actors' })
+@Controller({ version: '1', path: 'movies' })
 export class MovieActorController {
   constructor(private readonly movieActorService: MovieActorService) {}
 
-  @Post()
+  @Post(':movieId/actors')
   async create(
+    @Param('movieId', ParseIntPipe) movieId: number,
     @Body() createMovieActorDto: CreateMovieActorDto,
   ): Promise<MovieActor> {
-    return this.movieActorService.create(createMovieActorDto);
+    return this.movieActorService.create(movieId, createMovieActorDto);
   }
 
-  @Get()
-  async findAll(): Promise<MovieActor[]> {
-    return this.movieActorService.findAll();
+  @Get(':movieId/actors')
+  async findAll(
+    @Param('movieId', ParseIntPipe) movieId: number,
+  ): Promise<MovieActor[]> {
+    return this.movieActorService.findAll(movieId);
   }
 
-  @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<MovieActor> {
-    return this.movieActorService.findOne(+id);
+  @Get(':movieId/actors/:actorId')
+  async findOne(
+    @Param('movieId', ParseIntPipe) movieId: number,
+    @Param('actorId', ParseIntPipe) actorId: number,
+  ): Promise<MovieActor> {
+    return this.movieActorService.findOne(movieId, actorId);
   }
 
-  @Patch(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateMovieActorDto: UpdateMovieActorDto,
-  ): Promise<UpdateResult> {
-    return this.movieActorService.update(+id, updateMovieActorDto);
-  }
-
-  @Delete(':id')
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
-    return this.movieActorService.remove(+id);
+  @Delete(':movieId/actors/:actorId')
+  async remove(
+    @Param('movieId', ParseIntPipe) movieId: number,
+    @Param('actorId', ParseIntPipe) actorId: number,
+  ): Promise<DeleteResult> {
+    return this.movieActorService.remove(movieId, actorId);
   }
 }
