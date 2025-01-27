@@ -14,28 +14,28 @@ import { CreateDirectorDto } from './dto/create-director.dto';
 import { UpdateDirectorDto } from './dto/update-director.dto';
 import { Director } from './entities/director.entity';
 
-@Controller('api')
+@Controller({ version: '1', path: 'directors' })
 export class DirectorController {
   constructor(private readonly directorService: DirectorService) {}
 
-  @Post('director')
+  @Post()
   async create(
     @Body() createDirectorDto: CreateDirectorDto,
   ): Promise<Director> {
     return this.directorService.create(createDirectorDto);
   }
 
-  @Get('directors')
+  @Get()
   async findAll(): Promise<Director[]> {
     return this.directorService.findAll();
   }
 
-  @Get('director/:id')
+  @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Director> {
     return this.directorService.findOne(+id);
   }
 
-  @Patch('director/:id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDirectorDto: UpdateDirectorDto,
@@ -43,7 +43,7 @@ export class DirectorController {
     return this.directorService.update(+id, updateDirectorDto);
   }
 
-  @Delete('director/:id')
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.directorService.remove(+id);
   }

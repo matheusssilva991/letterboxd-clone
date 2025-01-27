@@ -14,28 +14,28 @@ import { UpdateMovieGenreDto } from './dto/update-movie_genre.dto';
 import { MovieGenre } from './entities/movie_genre.entity';
 import { MovieGenreService } from './movie_genre.service';
 
-@Controller('api')
+@Controller({ version: '1', path: 'movie-genres' })
 export class MovieGenreController {
   constructor(private readonly movieGenreService: MovieGenreService) {}
 
-  @Post('movie-genre')
+  @Post()
   async create(
     @Body() createMovieGenreDto: CreateMovieGenreDto,
   ): Promise<MovieGenre> {
     return this.movieGenreService.create(createMovieGenreDto);
   }
 
-  @Get('movie-genres')
+  @Get()
   async findAll(): Promise<MovieGenre[]> {
     return this.movieGenreService.findAll();
   }
 
-  @Get('movie-genre/:id')
+  @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<MovieGenre> {
     return this.movieGenreService.findOne(+id);
   }
 
-  @Patch('movie-genre/:id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMovieGenreDto: UpdateMovieGenreDto,
@@ -43,7 +43,7 @@ export class MovieGenreController {
     return this.movieGenreService.update(+id, updateMovieGenreDto);
   }
 
-  @Delete('movie-genre/:id')
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.movieGenreService.remove(+id);
   }

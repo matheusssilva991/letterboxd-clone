@@ -14,26 +14,26 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MovieService } from './movie.service';
 
-@Controller('api')
+@Controller({ version: '1', path: 'movies' })
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  @Post('movie')
+  @Post()
   async create(@Body() createMovieDto: CreateMovieDto): Promise<Movie> {
     return this.movieService.create(createMovieDto);
   }
 
-  @Get('movies')
+  @Get()
   async findAll(): Promise<Movie[]> {
     return this.movieService.findAll();
   }
 
-  @Get('movie/:id')
+  @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
     return this.movieService.findOne(+id);
   }
 
-  @Patch('movie/:id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMovieDto: UpdateMovieDto,
@@ -41,7 +41,7 @@ export class MovieController {
     return this.movieService.update(+id, updateMovieDto);
   }
 
-  @Delete('movie/:id')
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.movieService.remove(+id);
   }

@@ -14,26 +14,26 @@ import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
 import { GenreService } from './genre.service';
 
-@Controller('api')
+@Controller({ version: '1', path: 'genres' })
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
-  @Post('genre')
+  @Post()
   async create(@Body() createGenreDto: CreateGenreDto): Promise<Genre> {
     return this.genreService.create(createGenreDto);
   }
 
-  @Get('genres')
+  @Get()
   async findAll(): Promise<Genre[]> {
     return this.genreService.findAll();
   }
 
-  @Get('genre/:id')
+  @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Genre> {
     return this.genreService.findOne(+id);
   }
 
-  @Patch('genre/:id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGenreDto: UpdateGenreDto,
@@ -41,7 +41,7 @@ export class GenreController {
     return this.genreService.update(+id, updateGenreDto);
   }
 
-  @Delete('genre/:id')
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.genreService.remove(+id);
   }

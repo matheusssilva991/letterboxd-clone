@@ -14,26 +14,26 @@ import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
 import { Actor } from './entities/actor.entity';
 
-@Controller('api')
+@Controller({ version: '1', path: 'actors' })
 export class ActorController {
   constructor(private readonly actorService: ActorService) {}
 
-  @Post('actor')
+  @Post()
   async create(@Body() createActorDto: CreateActorDto): Promise<Actor> {
     return this.actorService.create(createActorDto);
   }
 
-  @Get('actors')
+  @Get()
   async findAll(): Promise<Actor[]> {
     return this.actorService.findAll();
   }
 
-  @Get('actor/:id')
+  @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Actor> {
     return this.actorService.findOne(+id);
   }
 
-  @Patch('actor/:id')
+  @Patch(':id')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateActorDto: UpdateActorDto,
@@ -41,7 +41,7 @@ export class ActorController {
     return this.actorService.update(+id, updateActorDto);
   }
 
-  @Delete('actor/:id')
+  @Delete(':id')
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.actorService.remove(+id);
   }

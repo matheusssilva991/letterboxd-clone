@@ -19,6 +19,9 @@ export class Actor {
   @Column({ name: 'description', type: 'text' })
   description: string;
 
+  @Column({ name: 'image_path', type: 'varchar', length: 255 })
+  imagePath: string;
+
   @OneToMany(() => MovieActor, (movieActor) => movieActor.actor)
   movieActors: MovieActor[];
 

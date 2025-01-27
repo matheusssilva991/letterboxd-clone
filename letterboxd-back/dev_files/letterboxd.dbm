@@ -3,7 +3,7 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.1.3" use-changelog="false" max-obj-count="10"
+<dbmodel pgmodeler-ver="1.1.5" use-changelog="false" max-obj-count="10"
 	 last-position="0,0" last-zoom="0.85"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
@@ -59,7 +59,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="diretor" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="diretor" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="80" y="60"/>
@@ -71,6 +71,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="descricao" not-null="true">
 		<type name="text" length="0"/>
+	</column>
+	<column name="caminho_imagem">
+		<type name="varchar" length="255"/>
 	</column>
 	<constraint name="diretor_pk" type="pk-constr" table="public.diretor">
 		<columns names="id" ref-type="src-columns"/>
@@ -137,7 +140,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.filme_genero"
 	 src-required="false" dst-required="false"/>
 
-<table name="ator" layers="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<table name="ator" layers="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="1140" y="40"/>
@@ -149,6 +152,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</column>
 	<column name="descricao" not-null="true">
 		<type name="text" length="0"/>
+	</column>
+	<column name="caminho_imagem">
+		<type name="varchar" length="255"/>
 	</column>
 	<constraint name="ator_pk" type="pk-constr" table="public.ator">
 		<columns names="id" ref-type="src-columns"/>
@@ -212,7 +218,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.filme_critica"
 	 src-required="false" dst-required="false"/>
 
-<table name="usuario" layers="0" collapse-mode="2" max-obj-count="6" z-value="0">
+<table name="usuario" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="1160" y="640"/>
@@ -229,6 +235,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="varchar" length="255"/>
 	</column>
 	<column name="senha" not-null="true">
+		<type name="varchar" length="255"/>
+	</column>
+	<column name="caminho_imagem">
 		<type name="varchar" length="255"/>
 	</column>
 	<constraint name="usuario_pk" type="pk-constr" table="public.usuario">

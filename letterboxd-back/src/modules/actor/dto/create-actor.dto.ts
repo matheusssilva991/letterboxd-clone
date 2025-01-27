@@ -9,6 +9,10 @@ export class CreateActorDto {
   @IsNotEmpty({ message: 'Informe uma descrição.' })
   description: string;
 
+  @IsString({ message: 'Informe um caminho de imagem válido.' })
+  @IsNotEmpty({ message: 'Informe um caminho de imagem.' })
+  imagePath: string;
+
   @IsEmpty()
   createdAt?: Date;
 
