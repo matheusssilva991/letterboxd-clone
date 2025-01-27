@@ -1,5 +1,7 @@
 FROM node:22.13.0-alpine
 
+LABEL maintainer="Matheus S.Silva"
+
 # Create app directory
 WORKDIR /usr/app
 
@@ -15,4 +17,4 @@ EXPOSE 3000
 
 ENTRYPOINT [ "npm" ]
 
-CMD ["start:dev"]
+CMD ["start"]

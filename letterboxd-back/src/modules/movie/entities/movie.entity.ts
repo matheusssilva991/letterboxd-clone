@@ -27,7 +27,7 @@ export class Movie {
   @Column({ name: 'release_date', type: 'date' })
   releaseDate: Date;
 
-  @Column({ name: 'image_path', type: 'varchar', length: 255 })
+  @Column({ name: 'image_path', type: 'varchar', length: 255, nullable: true })
   imagePath: string;
 
   @OneToMany(() => MovieGenre, (movieGenre) => movieGenre.movie)

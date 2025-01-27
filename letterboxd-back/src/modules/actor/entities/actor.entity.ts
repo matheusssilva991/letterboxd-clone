@@ -19,7 +19,7 @@ export class Actor {
   @Column({ name: 'description', type: 'text' })
   description: string;
 
-  @Column({ name: 'image_path', type: 'varchar', length: 255 })
+  @Column({ name: 'image_path', type: 'varchar', length: 255, nullable: true })
   imagePath: string;
 
   @OneToMany(() => MovieActor, (movieActor) => movieActor.actor)

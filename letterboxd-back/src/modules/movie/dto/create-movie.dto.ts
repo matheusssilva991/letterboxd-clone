@@ -4,6 +4,7 @@ import {
   IsEmpty,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsPositive,
   IsString,
 } from 'class-validator';
@@ -29,7 +30,7 @@ export class CreateMovieDto {
   releaseDate: Date;
 
   @IsString({ message: 'Informe um caminho de imagem válido.' })
-  @IsNotEmpty({ message: 'Informe um caminho de imagem.' })
+  @IsOptional({ message: 'Caminho de imagem é opcional.' })
   imagePath: string;
 
   @IsEmpty({ message: 'Não é necessário informar este campo.' })

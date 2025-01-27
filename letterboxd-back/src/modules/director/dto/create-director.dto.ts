@@ -1,4 +1,4 @@
-import { IsEmpty, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateDirectorDto {
   @IsString({ message: 'Informe um nome válido.' })
@@ -10,7 +10,7 @@ export class CreateDirectorDto {
   description: string;
 
   @IsString({ message: 'Informe um caminho de imagem válido.' })
-  @IsNotEmpty({ message: 'Informe um caminho de imagem.' })
+  @IsOptional({ message: 'Caminho de imagem é opcional.' })
   imagePath: string;
 
   @IsEmpty()
