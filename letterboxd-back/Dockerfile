@@ -1,20 +1,27 @@
-FROM node:22.13.0-alpine
+# Estágio de construção
+FROM node:20-alpine AS builder
 
-LABEL maintainer="Matheus S.Silva"
-
-# Create app directory
 WORKDIR /usr/app
 
-# Install app dependencies
 COPY package*.json ./
 
 RUN npm install
 
-# Bundle app source
 COPY . .
 
 EXPOSE 3000
 
-ENTRYPOINT [ "npm" ]
+RUN npm run build
 
-CMD ["start"]
+# Estágio de produção
+FROM node:20-alpine
+
+WORKDIR /usr/app
+
+COPY --from=builder /usr/app/dist ./dist
+
+COPY package*.json ./
+
+RUN npm install --production
+
+CMD ["npm", "start"]

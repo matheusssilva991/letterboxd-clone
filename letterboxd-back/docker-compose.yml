@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=letterboxd
+      - MYSQL_PASSWORD=letterboxd
+      - MYSQL_DATABASE=letterboxd
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src:/usr/app/src
+      - /usr/app/node_modules  # Evita sobrescrever node_modules no container
+    depends_on:
+      - redis
+      - mysql
+    networks:
+      - letterboxd
+    logging:  # Configuração de logs para o serviço "app"
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mysql:
+    image: mysql:8.0  # Usando uma versão mais recente
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: letterboxd
+      MYSQL_USER: letterboxd
+      MYSQL_PASSWORD: letterboxd
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - letterboxd
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    logging:  # Configuração de logs para o serviço "mysql"
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - letterboxd
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    logging:  # Configuração de logs para o serviço "redis"
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  letterboxd:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
