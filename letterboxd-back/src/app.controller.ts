@@ -1,17 +1,17 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
-@Controller('Hello') // Define a rota em nível de controller
+@Controller({ version: '1' })
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get('World') // Define a rota em nível de método
-  getHello(): string {
+  @Get('hello-world') // Define a rota em nível de método
+  async getHello(): Promise<string> {
     return this.appService.getHello();
   }
 
-  @Get('NestJS')
-  getNestJS(): string {
-    return 'NestJS!';
+  @Get('nestjs')
+  async getNestJS(): Promise<any> {
+    return this.appService.getNestJS();
   }
 }
