@@ -10,7 +10,7 @@
 			"name": "Genre",
 			"item": [
 				{
-					"name": "GENRES",
+					"name": "genres",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -27,17 +27,17 @@
 					"response": []
 				},
 				{
-					"name": "GENRE / ID",
+					"name": "genres / :id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/genre/2",
+							"raw": "{{url}}/genres/2",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"genre",
+								"genres",
 								"2"
 							]
 						}
@@ -45,7 +45,7 @@
 					"response": []
 				},
 				{
-					"name": "GENRE",
+					"name": "genres",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -60,19 +60,19 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/genre",
+							"raw": "{{url}}/genres",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"genre"
+								"genres"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "GENRE / ID",
+					"name": "genres / :id",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -87,12 +87,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/genre/3",
+							"raw": "{{url}}/genres/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"genre",
+								"genres",
 								"3"
 							]
 						}
@@ -100,17 +100,17 @@
 					"response": []
 				},
 				{
-					"name": "GENRE / ID",
+					"name": "genres / :id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/genre/4",
+							"raw": "{{url}}/genres/4",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"genre",
+								"genres",
 								"4"
 							]
 						}
@@ -123,7 +123,7 @@
 			"name": "Actor",
 			"item": [
 				{
-					"name": "ACTORS",
+					"name": "actors",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -140,17 +140,17 @@
 					"response": []
 				},
 				{
-					"name": "ACTOR / ID",
+					"name": "actors / :id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/actor/1",
+							"raw": "{{url}}/actors/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"actor",
+								"actors",
 								"1"
 							]
 						}
@@ -158,7 +158,7 @@
 					"response": []
 				},
 				{
-					"name": "ACTOR",
+					"name": "actors",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -178,19 +178,19 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/actor",
+							"raw": "{{url}}/actors",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"actor"
+								"actors"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "ACTOR / ID",
+					"name": "actors / :id",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -205,12 +205,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/actor/1",
+							"raw": "{{url}}/actors/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"actor",
+								"actors",
 								"1"
 							]
 						}
@@ -218,17 +218,17 @@
 					"response": []
 				},
 				{
-					"name": "ACTOR / ID",
+					"name": "actors / :id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/actor/4",
+							"raw": "{{url}}/actors/4",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"actor",
+								"actors",
 								"4"
 							]
 						}
@@ -241,7 +241,7 @@
 			"name": "Director",
 			"item": [
 				{
-					"name": "DIRECTORS",
+					"name": "directors",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -258,17 +258,17 @@
 					"response": []
 				},
 				{
-					"name": "DIRECTOR / ID",
+					"name": "directors / :id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/director/1",
+							"raw": "{{url}}/directors/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"director",
+								"directors",
 								"1"
 							]
 						}
@@ -276,7 +276,7 @@
 					"response": []
 				},
 				{
-					"name": "DIRECTOR",
+					"name": "directors",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -296,19 +296,19 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/director",
+							"raw": "{{url}}/directors",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"director"
+								"directors"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "DIRECTOR / ID",
+					"name": "directors / :id",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -323,12 +323,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/director/1",
+							"raw": "{{url}}/directors/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"director",
+								"directors",
 								"1"
 							]
 						}
@@ -336,386 +336,17 @@
 					"response": []
 				},
 				{
-					"name": "DIRECTOR / ID",
+					"name": "directors / :id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/director/4",
+							"raw": "{{url}}/directors/4",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"director",
-								"4"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Movie Genre",
-			"item": [
-				{
-					"name": "MOVIE-GENRES",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-genres",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-genres"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-GENRE / ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-genre/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-genre",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-GENRE",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "movieId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "genreId",
-									"value": "2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movie-genre",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-genre"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-GENRE / ID",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "movieId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "genreId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movie-genre/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-genre",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-GENRE / ID",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-genre/4",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-genre",
-								"4"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Movie Actor",
-			"item": [
-				{
-					"name": "MOVIE-ACTORS",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-actors",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-actors"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-ACTOR / ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-actor/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-actor",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-ACTOR",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "movieId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "actorId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movie-actor",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-actor"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-ACTOR / ID",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "movieId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "actorId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movie-actor/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-actor",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-ACTOR / ID",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-actor/4",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-actor",
-								"4"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Movie Director",
-			"item": [
-				{
-					"name": "MOVIE-DIRECTORS",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-directors",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-directors"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-DIRECTOR / ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-director/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-director",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-DIRECTOR",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "movieId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "directorId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movie-director",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-director"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-DIRECTOR / ID",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "movieId",
-									"value": "1",
-									"type": "text"
-								},
-								{
-									"key": "directorId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movie-director/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-director",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "MOVIE-DIRECTOR / ID",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movie-director/4",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movie-director",
+								"directors",
 								"4"
 							]
 						}
@@ -728,7 +359,7 @@
 			"name": "Movie",
 			"item": [
 				{
-					"name": "MOVIES",
+					"name": "movies",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -745,17 +376,17 @@
 					"response": []
 				},
 				{
-					"name": "MOVIE / ID",
+					"name": "movies / :id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/movie/1",
+							"raw": "{{url}}/movies/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"movie",
+								"movies",
 								"1"
 							]
 						}
@@ -763,7 +394,7 @@
 					"response": []
 				},
 				{
-					"name": "MOVIE",
+					"name": "movies",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -798,19 +429,19 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/movie",
+							"raw": "{{url}}/movies",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"movie"
+								"movies"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "MOVIE / ID",
+					"name": "movies / :id",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -840,12 +471,12 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/movie/1",
+							"raw": "{{url}}/movies/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"movie",
+								"movies",
 								"1"
 							]
 						}
@@ -853,18 +484,297 @@
 					"response": []
 				},
 				{
-					"name": "MOVIE / ID",
+					"name": "movies / :id",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/movie/3",
+							"raw": "{{url}}/movies/3",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"movie",
+								"movies",
 								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie Actor",
+			"item": [
+				{
+					"name": "movies / :movieId / actors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/actors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / actors / :actorId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/actors/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"actors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / actors",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "actorId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movies/2/actors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"2",
+								"actors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / actors / :actorId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/actors/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"actors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie Director",
+			"item": [
+				{
+					"name": "movies / :movieId / directors",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/directors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / directors / :directorId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/directors/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"directors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / directors",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "directorId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movies/2/directors",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"2",
+								"directors"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / directors / :directorId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/directors/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"directors",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie Genre",
+			"item": [
+				{
+					"name": "movies / :movieId / genres",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / genres / :genreId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/genres/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"genres",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / genres",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "genreId",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movies/2/genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"2",
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / genres / :genreId",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/genres/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"genres",
+								"1"
 							]
 						}
 					},
@@ -898,7 +808,7 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "http://localhost:3000/api",
+			"value": "http://localhost:3000/api/v1",
 			"type": "string"
 		}
 	]
