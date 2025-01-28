@@ -11,6 +11,7 @@ import { MovieModule } from './modules/movie/movie.module';
 import { MovieActorModule } from './modules/movie_actor/movie_actor.module';
 import { MovieDirectorModule } from './modules/movie_director/movie_director.module';
 import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
     MovieDirectorModule,
     MovieGenreModule,
     DirectorModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
