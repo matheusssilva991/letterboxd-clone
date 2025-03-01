@@ -13,6 +13,8 @@ services:
       MYSQL_USER: ${MYSQL_USER:-letterboxd}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-letterboxd}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
+      THROTTLER_TTL: ${THROTTLER_TTL:-60000}
+      THROTTLER_LIMIT: ${THROTTLER_LIMIT:-10}
     ports:
       - "3000:3000"
     volumes:
