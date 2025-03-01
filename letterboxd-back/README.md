@@ -25,17 +25,25 @@ Antes de iniciar, certifique-se de ter instalado:
 1. Clone o repositório:
 
    ```sh
-   git clone https://github.com/seu-usuario/letterboxd-clone-backend.git
-   cd letterboxd-clone-backend
+   git clone https://github.com/matheusssilva991/letterboxd-clone
+   cd letterboxd-back
    ```
 
-2. Suba os contêineres com o Docker Compose:
+2. Copie o arquivo `.env.example` para `.env`:
+
+   ```sh
+   cp .env.example .env
+   ```
+
+3. Configure as variáveis de ambiente no arquivo `.env`.
+
+4. Suba os contêineres com o Docker Compose:
 
    ```sh
    docker-compose up -d
    ```
 
-3. O backend estará rodando em: `http://localhost:3000`
+5. O backend estará rodando em: `http://localhost:3000`
 
 ### Sem Docker
 
@@ -63,13 +71,16 @@ Antes de iniciar, certifique-se de ter instalado:
 
 ```files
 letterboxd-clone-backend/
+├── dist/               # Arquivos compilados
+├── node_modules/       # Dependências do projeto
+├── config/             # Configurações do projeto
+├── dev_files/          # Arquivos de desenvolvimento
 ├── src/
-│   ├── modules/    # Módulos do NestJS
-│   ├── common/     # Módulos comuns
-│   ├── main.ts     # Arquivo principal do app
-|   ├── app.module.ts # Módulo principal
-├── dev_files/         # Arquivos de desenvolvimento
-├── docker-compose.yml # Configuração dos contêineres
+│   ├── modules/        # Módulos do NestJS
+│   ├── common/         # Módulos comuns
+│   ├── main.ts         # Arquivo principal do app
+|   ├── app.module.ts   # Módulo principal
+├── docker-compose.yml  # Configuração dos contêineres
 ├── Dockerfile          # Configuração do backend no Docker
 ├── .env.example        # Exemplo de variáveis de ambiente
 └── README.md
