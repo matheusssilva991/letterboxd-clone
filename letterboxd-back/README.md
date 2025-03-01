@@ -128,4 +128,3 @@ npm run test:e2e
 ---
 
 Se precisar de algo mais específico, é só avisar! 🚀
-

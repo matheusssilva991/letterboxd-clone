@@ -4,15 +4,15 @@ services:
   app:
     build: .
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - MYSQL_HOST=mysql
-      - MYSQL_PORT=3306
-      - MYSQL_USER=letterboxd
-      - MYSQL_PASSWORD=letterboxd
-      - MYSQL_DATABASE=letterboxd
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-3000}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      MYSQL_HOST: ${MYSQL_HOST:-mysql}
+      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_USER: ${MYSQL_USER:-letterboxd}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-letterboxd}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
     ports:
       - "3000:3000"
     volumes:
@@ -32,10 +32,10 @@ services:
   mysql:
     image: mysql:8.0  # Usando uma versão mais recente
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: letterboxd
-      MYSQL_USER: letterboxd
-      MYSQL_PASSWORD: letterboxd
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
+      MYSQL_USER: ${MYSQL_USER:-letterboxd}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-letterboxd}
     volumes:
       - mysql_data:/var/lib/mysql
     networks:

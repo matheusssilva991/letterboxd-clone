@@ -4,10 +4,13 @@ import {
   CacheModuleAsyncOptions,
 } from '@nestjs/cache-manager';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import * as redisStore from 'cache-manager-redis-store';
+import { cacheConfig } from '../config/cache.config';
+import { throttlerConfig } from '../config/throttler.config';
+import { typeOrmConfig } from '../config/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggingMiddleware } from './common/middlewares/logging.midleware';
@@ -26,32 +29,9 @@ import { UserModule } from './modules/user/user.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('MYSQL_HOST'),
-        port: configService.get('MYSQL_PORT'),
-        username: configService.get('MYSQL_USERNAME'),
-        password: configService.get('MYSQL_PASSWORD'),
-        database: configService.get('MYSQL_DATABASE'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
-    }),
-    CacheModule.registerAsync<CacheModuleAsyncOptions>({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        store: redisStore,
-        host: configService.get('REDIS_HOST', 'localhost'),
-        port: configService.get('REDIS_PORT', 6379),
-        ttl: configService.get('CACHE_TTL', 5000),
-        max: configService.get('CACHE_MAX', 10),
-      }),
-      isGlobal: true,
-    }),
+    TypeOrmModule.forRootAsync(typeOrmConfig),
+    CacheModule.registerAsync<CacheModuleAsyncOptions>(cacheConfig),
+    ThrottlerModule.forRootAsync(throttlerConfig),
     GenreModule,
     ActorModule,
     MovieModule,
