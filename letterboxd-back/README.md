@@ -1,73 +1,131 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Letterboxd Clone - Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este é o repositório do backend para o projeto de replicação do site Letterboxd. Ele foi desenvolvido utilizando **NestJS**, com **MySQL** como banco de dados, **Redis** para cache e executado em contêineres via **Docker** e **Docker Compose**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tecnologias Utilizadas
 
-## Description
+- **NestJS** - Framework para Node.js
+- **MySQL** - Banco de dados relacional
+- **Redis** - Cache para melhoria de performance
+- **Docker** - Contêinerização do backend
+- **Docker Compose** - Orquestração dos contêineres
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Requisitos
 
-## Installation
+Antes de iniciar, certifique-se de ter instalado:
 
-```bash
-$ npm install
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+- [Node.js](https://nodejs.org/) (caso queira rodar sem Docker)
+
+## Instalação e Execução
+
+### Com Docker (Recomendado)
+
+1. Clone o repositório:
+
+   ```sh
+   git clone https://github.com/seu-usuario/letterboxd-clone-backend.git
+   cd letterboxd-clone-backend
+   ```
+
+2. Suba os contêineres com o Docker Compose:
+
+   ```sh
+   docker-compose up -d
+   ```
+
+3. O backend estará rodando em: `http://localhost:3000`
+
+### Sem Docker
+
+1. Instale as dependências:
+
+   ```sh
+   npm install
+   ```
+
+2. Copie o arquivo `.env.example` para `.env`:
+
+   ```sh
+   cp .env.example .env
+   ```
+
+3. Configure as variáveis de ambiente no arquivo `.env`.
+
+4. Inicie o servidor:
+
+   ```sh
+   npm run start
+   ```
+
+## Estrutura do Projeto
+
+```files
+letterboxd-clone-backend/
+├── src/
+│   ├── modules/    # Módulos do NestJS
+│   ├── common/     # Módulos comuns
+│   ├── main.ts     # Arquivo principal do app
+|   ├── app.module.ts # Módulo principal
+├── dev_files/         # Arquivos de desenvolvimento
+├── docker-compose.yml # Configuração dos contêineres
+├── Dockerfile          # Configuração do backend no Docker
+├── .env.example        # Exemplo de variáveis de ambiente
+└── README.md
 ```
 
-## Running the app
+## Variáveis de Ambiente
 
-```bash
-# development
-$ npm run start
+Crie um arquivo `.env` na raiz do projeto baseado no `.env.example` e configure as seguintes variáveis:
 
-# watch mode
-$ npm run start:dev
+```env
+NODE_ENV='development'
+PORT='3000'
 
-# production mode
-$ npm run start:prod
+MYSQL_HOST='localhost'
+MYSQL_PORT='3306'
+MYSQL_USERNAME='root'
+MYSQL_PASSWORD='password'
+MYSQL_DATABASE='letterboxd'
+
+REDIS_HOST='localhost'
+REDIS_PORT='6379'
+
+CACHE_TTL='5000'
+CACHE_MAX='100
 ```
 
-## Test
+## Endpoints Principais
 
-```bash
-# unit tests
-$ npm run test
+- `GET /movies` - Lista todos os filmes
+- `POST /movies` - Adiciona um novo filme
+- `GET /users/:id` - Retorna informações do usuário
+- `POST /auth/login` - Autentica um usuário
 
-# e2e tests
-$ npm run test:e2e
+## Testes
 
-# test coverage
-$ npm run test:cov
+Para rodar os testes unitários:
+
+```sh
+npm run test
 ```
 
-## Support
+Para rodar os testes e2e:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```sh
+npm run test:e2e
+```
 
-## Stay in touch
+## Contribuição
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+1. Fork este repositório
+2. Crie uma branch (`git checkout -b minha-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Faça o push da branch (`git push origin minha-feature`)
+5. Abra um Pull Request
 
-## License
+---
 
-Nest is [MIT licensed](LICENSE).
+Se precisar de algo mais específico, é só avisar! 🚀
+
