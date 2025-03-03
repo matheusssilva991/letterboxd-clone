@@ -11,10 +11,12 @@ services:
       MYSQL_HOST: ${MYSQL_HOST:-mysql}
       MYSQL_PORT: ${MYSQL_PORT:-3306}
       MYSQL_USER: ${MYSQL_USER:-letterboxd}
+      CACHE_TTL: ${CACHE_TTL:-10}
+      CACHE_MAX: ${CACHE_MAX:-100}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-letterboxd}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
-      THROTTLER_TTL: ${THROTTLER_TTL:-60000}
-      THROTTLER_LIMIT: ${THROTTLER_LIMIT:-10}
+      THROTTLER_TTL: ${THROTTLER_TTL:-60}
+      THROTTLER_LIMIT: ${THROTTLER_LIMIT:-50}
     ports:
       - "3000:3000"
     volumes:

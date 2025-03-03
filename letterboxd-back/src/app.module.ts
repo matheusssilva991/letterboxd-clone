@@ -22,6 +22,7 @@ import { MovieActorModule } from './modules/movie_actor/movie_actor.module';
 import { MovieDirectorModule } from './modules/movie_director/movie_director.module';
 import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
 import { UserModule } from './modules/user/user.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { UserModule } from './modules/user/user.module';
     MovieGenreModule,
     DirectorModule,
     UserModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [

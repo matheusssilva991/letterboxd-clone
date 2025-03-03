@@ -6,8 +6,8 @@ export const throttlerConfig: ThrottlerAsyncOptions = {
   inject: [ConfigService],
   useFactory: (config: ConfigService) => [
     {
-      ttl: config.get('THROTTLE_TTL'),
-      limit: config.get('THROTTLE_LIMIT'),
+      ttl: config.get('THROTTLE_TTL', 60),
+      limit: config.get('THROTTLE_LIMIT', 50),
     },
   ],
 };

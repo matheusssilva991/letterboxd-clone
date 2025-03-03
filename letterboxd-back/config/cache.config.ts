@@ -9,8 +9,8 @@ export const cacheConfig: CacheModuleAsyncOptions = {
     store: redisStore,
     host: configService.get('REDIS_HOST', 'localhost'),
     port: configService.get('REDIS_PORT', 6379),
-    ttl: configService.get('CACHE_TTL', 5000),
-    max: configService.get('CACHE_MAX', 10),
+    ttl: configService.get('CACHE_TTL', 10),
+    max: configService.get('CACHE_MAX', 100),
   }),
   isGlobal: true,
 };
