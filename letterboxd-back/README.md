@@ -75,6 +75,7 @@ letterboxd-clone-backend/
 ├── node_modules/       # Dependências do projeto
 ├── config/             # Configurações do projeto
 ├── dev_files/          # Arquivos de desenvolvimento
+├── uploads/            # Arquivos de upload
 ├── src/
 │   ├── modules/        # Módulos do NestJS
 │   ├── common/         # Módulos comuns
@@ -103,8 +104,11 @@ MYSQL_DATABASE='letterboxd'
 REDIS_HOST='localhost'
 REDIS_PORT='6379'
 
-CACHE_TTL='5000'
-CACHE_MAX='100
+CACHE_TTL='10'
+CACHE_MAX='100'
+
+THROTTLER_TTL='60'
+THROTTLER_LIMIT='50'
 ```
 
 ## Endpoints Principais
