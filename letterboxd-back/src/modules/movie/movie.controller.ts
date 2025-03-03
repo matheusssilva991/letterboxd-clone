@@ -10,17 +10,21 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { multerConfig } from '../../../config/multer.config';
+import { FileService } from '../file/file.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MovieService } from './movie.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { multerConfig } from '../../../config/multer.config';
 
 @Controller({ version: '1', path: 'movies' })
 export class MovieController {
-  constructor(private readonly movieService: MovieService) {}
+  constructor(
+    private readonly movieService: MovieService,
+    private readonly fileService: FileService,
+  ) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('image', multerConfig('movies')))
@@ -28,8 +32,17 @@ export class MovieController {
     @UploadedFile() image: Express.Multer.File,
     @Body() createMovieDto: CreateMovieDto,
   ): Promise<Movie> {
-    createMovieDto.imagePath = image.path;
-    return this.movieService.create(createMovieDto);
+    if (image) {
+      createMovieDto.imagePath = image.path;
+    }
+
+    try {
+      return await this.movieService.create(createMovieDto);
+    } catch (error) {
+      this.fileService.deleteImage(image.path);
+
+      throw error;
+    }
   }
 
   @Get()

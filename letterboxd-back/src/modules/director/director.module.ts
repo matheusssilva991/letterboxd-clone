@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FileModule } from '../file/file.module';
 import { DirectorController } from './director.controller';
 import { DirectorService } from './director.service';
 import { Director } from './entities/director.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Director])],
+  imports: [TypeOrmModule.forFeature([Director]), FileModule],
   controllers: [DirectorController],
   providers: [DirectorService],
   exports: [DirectorService],

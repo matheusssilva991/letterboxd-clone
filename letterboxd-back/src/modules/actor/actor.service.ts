@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { FileService } from '../file/file.service';
 import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
 import { Actor } from './entities/actor.entity';
@@ -10,6 +11,7 @@ export class ActorService {
   constructor(
     @InjectRepository(Actor)
     private readonly actorRepository: Repository<Actor>,
+    private readonly fileService: FileService,
   ) {}
 
   async create(createActorDto: CreateActorDto): Promise<Actor> {
@@ -32,13 +34,24 @@ export class ActorService {
     id: number,
     updateActorDto: UpdateActorDto,
   ): Promise<UpdateResult> {
-    await this.findOne(id);
+    const actor = await this.findOne(id);
+
+    if (
+      updateActorDto.imagePath &&
+      actor.imagePath !== updateActorDto.imagePath
+    ) {
+      await this.fileService.deleteImage(actor.imagePath);
+    }
 
     return this.actorRepository.update(id, updateActorDto);
   }
 
   async remove(id: number): Promise<DeleteResult> {
-    await this.findOne(id);
+    const actor = await this.findOne(id);
+
+    if (actor.imagePath) {
+      await this.fileService.deleteImage(actor.imagePath);
+    }
 
     return await this.actorRepository.delete(id);
   }

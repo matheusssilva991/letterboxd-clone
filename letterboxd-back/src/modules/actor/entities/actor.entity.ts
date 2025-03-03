@@ -13,7 +13,7 @@ export class Actor {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', length: 255, unique: true })
+  @Column({ name: 'name', type: 'varchar', length: 255, unique: false })
   name: string;
 
   @Column({ name: 'description', type: 'text' })
