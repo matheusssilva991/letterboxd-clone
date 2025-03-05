@@ -3,8 +3,8 @@
 CAUTION: Do not modify this file unless you know what you are doing.
  Unexpected results may occur if the code is changed deliberately.
 -->
-<dbmodel pgmodeler-ver="1.1.5" use-changelog="false" max-obj-count="10"
-	 last-position="0,0" last-zoom="0.85"
+<dbmodel pgmodeler-ver="1.1.6" use-changelog="false" max-obj-count="10"
+	 last-position="0,187" last-zoom="0.85"
 	 default-schema="public" default-owner="postgres"
 	 layers="Default layer"
 	 active-layers="0"
@@ -218,7 +218,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	 dst-table="public.filme_critica"
 	 src-required="false" dst-required="false"/>
 
-<table name="usuario" layers="0" collapse-mode="2" max-obj-count="7" z-value="0">
+<table name="usuario" layers="0" collapse-mode="2" max-obj-count="8" z-value="0">
 	<schema name="public"/>
 	<role name="postgres"/>
 	<position x="1160" y="640"/>
@@ -231,11 +231,14 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="email" not-null="true">
 		<type name="varchar" length="255"/>
 	</column>
-	<column name="username" not-null="true">
+	<column name="usuario" not-null="true">
 		<type name="varchar" length="255"/>
 	</column>
 	<column name="senha" not-null="true">
 		<type name="varchar" length="255"/>
+	</column>
+	<column name="cargo">
+		<type name="varchar" length="20"/>
 	</column>
 	<column name="caminho_imagem">
 		<type name="varchar" length="255"/>
