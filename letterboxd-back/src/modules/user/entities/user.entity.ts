@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { RoleEnum } from '../../../common/enums/role.enum';
+import { MovieReview } from '../../movie_review/entities/movie_actor.entity';
 
 @Entity({ name: 'user', orderBy: { id: 'ASC' } })
 export class User {
@@ -53,6 +55,9 @@ export class User {
 
   @Column({ name: 'image_path', type: 'varchar', length: 255, nullable: true })
   imagePath: string;
+
+  @OneToMany(() => MovieReview, (movieReview) => movieReview.movie)
+  movieReviews: MovieReview[];
 
   @CreateDateColumn({
     type: 'timestamp',

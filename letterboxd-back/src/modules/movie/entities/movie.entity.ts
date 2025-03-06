@@ -9,6 +9,7 @@ import {
 import { MovieActor } from '../../movie_actor/entities/movie_actor.entity';
 import { MovieDirector } from '../../movie_director/entities/movie_director.entity';
 import { MovieGenre } from '../../movie_genre/entities/movie_genre.entity';
+import { MovieReview } from '../../movie_review/entities/movie_actor.entity';
 
 @Entity({ name: 'movie', orderBy: { id: 'ASC' } })
 export class Movie {
@@ -38,6 +39,9 @@ export class Movie {
 
   @OneToMany(() => MovieActor, (movieActor) => movieActor.movie)
   movieActors: MovieActor[];
+
+  @OneToMany(() => MovieReview, (movieReview) => movieReview.movie)
+  movieReviews: MovieReview[];
 
   @CreateDateColumn({
     type: 'timestamp',
