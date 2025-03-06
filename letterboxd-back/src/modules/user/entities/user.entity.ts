@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { RoleEnum } from '../../../common/enums/role.enum';
 
 @Entity({ name: 'user', orderBy: { id: 'ASC' } })
 export class User {
@@ -32,8 +33,23 @@ export class User {
   })
   username: string;
 
-  @Column({ name: 'password', type: 'varchar', length: 255, nullable: false })
+  @Column({
+    name: 'password',
+    type: 'varchar',
+    length: 255,
+    nullable: false,
+    select: false,
+  })
   password: string;
+
+  @Column({
+    name: 'role',
+    type: 'varchar',
+    length: 255,
+    nullable: false,
+    default: RoleEnum.USER,
+  })
+  role: RoleEnum;
 
   @Column({ name: 'image_path', type: 'varchar', length: 255, nullable: true })
   imagePath: string;

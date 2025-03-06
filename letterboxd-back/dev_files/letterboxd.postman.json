@@ -163,8 +163,8 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "name",
 									"value": "Scarlett Johanson",
@@ -174,6 +174,11 @@
 									"key": "description",
 									"value": "Atriz americana, famosa por filmes como Vingadores, Lucy, Jojo Rabbit.",
 									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-28-45.png"
 								}
 							]
 						},
@@ -230,6 +235,159 @@
 							"path": [
 								"actors",
 								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users / :id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "matheus@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456Mc@",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-05 15-31-07.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users / :id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "matheus@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456Mc@",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-24-40.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/users/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actors / :id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1"
 							]
 						}
 					},
@@ -381,13 +539,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/movies/1",
+							"raw": "{{url}}/movies/13",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"movies",
-								"1"
+								"13"
 							]
 						}
 					},
@@ -399,8 +557,8 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "name",
 									"value": "Vingadores",
@@ -422,9 +580,9 @@
 									"type": "text"
 								},
 								{
-									"key": "imagePath",
-									"value": "teste",
-									"type": "text"
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-28-45.png"
 								}
 							]
 						},
@@ -446,8 +604,8 @@
 						"method": "PATCH",
 						"header": [],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
 								{
 									"key": "name",
 									"value": "Vingadores 2",
@@ -467,6 +625,11 @@
 									"key": "synopsis",
 									"value": "Continuação de um filme genérico de herói.",
 									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-25-25.png"
 								}
 							]
 						},
@@ -489,13 +652,13 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/movies/3",
+							"raw": "{{url}}/movies/11",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"movies",
-								"3"
+								"11"
 							]
 						}
 					},

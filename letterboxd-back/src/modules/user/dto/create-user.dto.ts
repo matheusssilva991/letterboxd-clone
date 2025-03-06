@@ -1,11 +1,13 @@
 import {
   IsEmail,
   IsEmpty,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsStrongPassword,
 } from 'class-validator';
+import { RoleEnum } from '../../../common/enums/role.enum';
 
 export class CreateUserDto {
   @IsString({ message: 'Informe um nome válido.' })
@@ -33,6 +35,12 @@ export class CreateUserDto {
     { message: 'Informe uma senha forte.' },
   )
   password: string;
+
+  @IsEnum(() => RoleEnum, {
+    message: `Informe um cargo válido: ${Object.values(RoleEnum).join(', ')}.`,
+  })
+  @IsOptional({ message: 'Cargo é opcional.' })
+  role: RoleEnum;
 
   @IsString({ message: 'Informe um caminho de imagem válido.' })
   @IsOptional({ message: 'Caminho de imagem é opcional.' })
