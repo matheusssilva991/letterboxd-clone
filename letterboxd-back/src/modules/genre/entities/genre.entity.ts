@@ -2,11 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MovieGenre } from '../../movie_genre/entities/movie_genre.entity';
+import { Movie } from '../../movie/entities/movie.entity';
 
 @Entity({ name: 'genre', orderBy: { id: 'ASC' } })
 export class Genre {
@@ -16,8 +17,13 @@ export class Genre {
   @Column({ name: 'name', type: 'varchar', length: 255, unique: true })
   name: string;
 
-  @OneToMany(() => MovieGenre, (movieGenre) => movieGenre.genre)
-  movieGenres: MovieGenre[];
+  @ManyToMany(() => Movie, (movie) => movie.genres)
+  @JoinTable({
+    name: 'movie_genre',
+    joinColumn: { name: 'genre_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+  })
+  movies: Movie[];
 
   // Diz em que momento o registro foi criado
   @CreateDateColumn({

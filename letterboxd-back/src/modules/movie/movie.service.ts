@@ -1,8 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { DeleteResult, ILike, Repository, UpdateResult } from 'typeorm';
+import { parseOrder } from '../../common/helpers/query.helper';
 import { FileService } from '../file/file.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { MovieQueryDto } from './dto/movie-query.dto';
+import { MoviesQueryDto } from './dto/movies-query.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 
@@ -18,13 +21,42 @@ export class MovieService {
     return await this.movieRepository.save(createMovieDto);
   }
 
-  async findAll(): Promise<Movie[]> {
-    return await this.movieRepository.find();
+  async findAll(query?: MoviesQueryDto): Promise<Movie[]> {
+    if (Object.keys(query).length) {
+      return this.findAllWithFilter(query);
+    } else {
+      return this.movieRepository.find();
+    }
   }
 
-  async findOne(id: number): Promise<Movie> {
+  async findAllWithFilter(query: MoviesQueryDto) {
+    const filter = {
+      ...(query.title && { title: ILike(`%${query.title}%`) }),
+      ...(query.synopsis && {
+        synopsis: ILike(`%${query.synopsis}%`),
+      }),
+    };
+
+    // Trazer dados dos filmes relacionados
+    const relations: string[] = query.include ? query.include.split(',') : [];
+
+    return await this.movieRepository.find({
+      where: filter,
+      order: parseOrder(query.order),
+      take: query.limit || undefined,
+      skip: (query.page - 1) * query.limit || 0,
+      relations,
+    });
+  }
+
+  async findOne(id: number, query?: MovieQueryDto): Promise<Movie> {
+    const relations: string[] = query?.include ? query.include.split(',') : [];
+
     try {
-      return await this.movieRepository.findOneByOrFail({ id });
+      return await this.movieRepository.findOneOrFail({
+        where: { id },
+        relations: relations,
+      });
     } catch (error) {
       throw new NotFoundException('Filme não encontrado.');
     }

@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +19,8 @@ import { CreateDirectorDto } from './dto/create-director.dto';
 import { UpdateDirectorDto } from './dto/update-director.dto';
 import { Director } from './entities/director.entity';
 import { FileService } from '../file/file.service';
+import { DirectorsQueryDto } from './dto/directors-query.dto';
+import { DirectorQueryDto } from './dto/director-query.dto';
 
 @Controller({ version: '1', path: 'directors' })
 export class DirectorController {
@@ -45,13 +48,16 @@ export class DirectorController {
   }
 
   @Get()
-  async findAll(): Promise<Director[]> {
-    return this.directorService.findAll();
+  async findAll(@Query() query: DirectorsQueryDto): Promise<Director[]> {
+    return this.directorService.findAll(query);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Director> {
-    return this.directorService.findOne(+id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: DirectorQueryDto,
+  ): Promise<Director> {
+    return this.directorService.findOne(+id, query);
   }
 
   @Patch(':id')

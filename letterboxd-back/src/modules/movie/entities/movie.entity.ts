@@ -2,13 +2,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MovieActor } from '../../movie_actor/entities/movie_actor.entity';
-import { MovieDirector } from '../../movie_director/entities/movie_director.entity';
-import { MovieGenre } from '../../movie_genre/entities/movie_genre.entity';
+import { Actor } from '../../actor/entities/actor.entity';
+import { Director } from '../../director/entities/director.entity';
+import { Genre } from '../../genre/entities/genre.entity';
 import { MovieReview } from '../../movie_review/entities/movie_actor.entity';
 
 @Entity({ name: 'movie', orderBy: { id: 'ASC' } })
@@ -16,10 +18,10 @@ export class Movie {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
-  @Column({ name: 'name', type: 'varchar', length: 255 })
-  name: string;
+  @Column({ name: 'title', type: 'varchar', length: 255, nullable: false })
+  title: string;
 
-  @Column({ name: 'synopsis', type: 'text' })
+  @Column({ name: 'synopsis', type: 'text', nullable: false })
   synopsis: string;
 
   @Column({ name: 'duration', type: 'int', unsigned: true })
@@ -31,14 +33,29 @@ export class Movie {
   @Column({ name: 'image_path', type: 'varchar', length: 255, nullable: true })
   imagePath: string;
 
-  @OneToMany(() => MovieGenre, (movieGenre) => movieGenre.movie)
-  movieGenres: MovieGenre[];
+  @ManyToMany(() => Genre, (genre) => genre.movies)
+  @JoinTable({
+    name: 'movie_genre',
+    joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'genre_id', referencedColumnName: 'id' },
+  })
+  genres: Genre[];
 
-  @OneToMany(() => MovieDirector, (movieDirector) => movieDirector.movie)
-  movieDirectors: MovieDirector[];
+  @ManyToMany(() => Director, (director) => director.movies)
+  @JoinTable({
+    name: 'movie_director',
+    joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'director_id', referencedColumnName: 'id' },
+  })
+  directors: Director[];
 
-  @OneToMany(() => MovieActor, (movieActor) => movieActor.movie)
-  movieActors: MovieActor[];
+  @ManyToMany(() => Actor, (actor) => actor.movies)
+  @JoinTable({
+    name: 'movie_actor',
+    joinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'actor_id', referencedColumnName: 'id' },
+  })
+  actors: Actor[];
 
   @OneToMany(() => MovieReview, (movieReview) => movieReview.movie)
   movieReviews: MovieReview[];

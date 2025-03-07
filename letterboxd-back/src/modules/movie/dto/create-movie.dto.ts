@@ -10,9 +10,9 @@ import {
 } from 'class-validator';
 
 export class CreateMovieDto {
-  @IsString({ message: 'Informe um nome válido.' })
-  @IsNotEmpty({ message: 'Informe um nome.' })
-  name: string;
+  @IsString({ message: 'Informe um titulo válido.' })
+  @IsNotEmpty({ message: 'Informe um titulo.' })
+  title: string;
 
   @IsString({ message: 'Informe uma sinopse válida.' })
   @IsNotEmpty({ message: 'Informe uma sinopse.' })

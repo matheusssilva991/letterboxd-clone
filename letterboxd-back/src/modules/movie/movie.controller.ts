@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -15,6 +16,8 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
 import { FileService } from '../file/file.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { MovieQueryDto } from './dto/movie-query.dto';
+import { MoviesQueryDto } from './dto/movies-query.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MovieService } from './movie.service';
@@ -46,13 +49,16 @@ export class MovieController {
   }
 
   @Get()
-  async findAll(): Promise<Movie[]> {
-    return this.movieService.findAll();
+  async findAll(@Query() query: MoviesQueryDto): Promise<Movie[]> {
+    return this.movieService.findAll(query);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Movie> {
-    return this.movieService.findOne(+id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: MovieQueryDto,
+  ): Promise<Movie> {
+    return this.movieService.findOne(+id, query);
   }
 
   @Patch(':id')

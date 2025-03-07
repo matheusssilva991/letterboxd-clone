@@ -2,11 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  OneToMany,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { MovieActor } from '../../movie_actor/entities/movie_actor.entity';
+import { Movie } from '../../movie/entities/movie.entity';
 
 @Entity({ name: 'actor', orderBy: { id: 'ASC' } })
 export class Actor {
@@ -22,8 +23,13 @@ export class Actor {
   @Column({ name: 'image_path', type: 'varchar', length: 255, nullable: true })
   imagePath: string;
 
-  @OneToMany(() => MovieActor, (movieActor) => movieActor.actor)
-  movieActors: MovieActor[];
+  @ManyToMany(() => Movie, (movie) => movie.actors)
+  @JoinTable({
+    name: 'movie_actor', // Nome da tabela intermediária
+    joinColumn: { name: 'actor_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'movie_id', referencedColumnName: 'id' },
+  })
+  movies: Movie[];
 
   @CreateDateColumn({
     type: 'timestamp',

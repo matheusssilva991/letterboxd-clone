@@ -1,17 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DirectorModule } from '../director/director.module';
+import { Movie } from '../movie/entities/movie.entity';
 import { MovieModule } from '../movie/movie.module';
-import { MovieDirector } from './entities/movie_director.entity';
 import { MovieDirectorController } from './movie_director.controller';
 import { MovieDirectorService } from './movie_director.service';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([MovieDirector]),
-    MovieModule,
-    DirectorModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Movie]), MovieModule, DirectorModule],
   controllers: [MovieDirectorController],
   providers: [MovieDirectorService],
   exports: [MovieDirectorService],

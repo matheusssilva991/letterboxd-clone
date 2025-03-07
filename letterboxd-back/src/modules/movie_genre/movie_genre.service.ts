@@ -1,86 +1,63 @@
 import {
-  BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { Genre } from '../genre/entities/genre.entity';
 import { GenreService } from '../genre/genre.service';
+import { Movie } from '../movie/entities/movie.entity';
 import { MovieService } from '../movie/movie.service';
-import { CreateMovieGenreDto } from './dto/create-movie_genre.dto';
-import { MovieGenre } from './entities/movie_genre.entity';
 
 @Injectable()
 export class MovieGenreService {
   constructor(
-    @InjectRepository(MovieGenre)
-    private readonly movieGenreRepository: Repository<MovieGenre>,
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
     private readonly movieService: MovieService,
     private readonly genreService: GenreService,
   ) {}
 
-  async create(
-    movieId: number,
-    createMovieGenreDto: CreateMovieGenreDto,
-  ): Promise<MovieGenre> {
-    // Verifica se o filme e o gênero existem
-    await this.movieService.findOne(movieId);
-    await this.genreService.findOne(createMovieGenreDto.genreId);
+  async create(movieId: number, genreId: number): Promise<Movie> {
+    // Verifica se o filme e gênero existem
+    const movie = await this.findMovieWithGenre(movieId);
+    const genre = await this.genreService.findOne(genreId);
 
-    // Verifica se o registro já existe
-    const movieGenre = await this.FindOneNoException(
-      movieId,
-      createMovieGenreDto.genreId,
-    );
-
-    if (movieGenre) {
-      throw new BadRequestException(
+    // Evitar duplicação
+    if (await this.relationExists(movie, genreId)) {
+      throw new ConflictException(
         'Relação entre filme e gênero já cadastrada.',
       );
     }
 
-    // Cria um novo registro
-    return this.movieGenreRepository.save({
-      ...createMovieGenreDto,
-      movieId,
-    });
+    movie.genres.push(genre);
+    return this.movieRepository.save(movie);
   }
 
-  async findAll(movieId: number): Promise<MovieGenre[]> {
-    return this.movieGenreRepository.find({
-      where: {
-        movieId,
-      },
-    });
+  async findAll(movieId: number): Promise<Genre[]> {
+    const movie = await this.findMovieWithGenre(movieId);
+    return movie.genres;
   }
 
-  async findOne(movieId: number, genreId: number): Promise<MovieGenre> {
-    try {
-      return await this.movieGenreRepository.findOneOrFail({
-        where: {
-          movieId,
-          genreId,
-        },
-      });
-    } catch (error) {
-      throw new NotFoundException('Gênero do filme não encontrado(a).');
+  async findMovieWithGenre(movieId: number): Promise<Movie> {
+    return await this.movieService.findOne(movieId, { include: 'genres' });
+  }
+
+  async remove(movieId: number, genreId: number): Promise<Movie> {
+    const movie = await this.findMovieWithGenre(movieId);
+
+    if (!(await this.relationExists(movie, genreId))) {
+      throw new NotFoundException(
+        'Relação entre filme e gênero não encontrada.',
+      );
     }
+
+    movie.genres = movie.genres.filter((a) => a.id !== genreId);
+    return await this.movieRepository.save(movie);
   }
 
-  async FindOneNoException(
-    movieId: number,
-    genreId: number,
-  ): Promise<MovieGenre> {
-    return await this.movieGenreRepository.findOne({
-      where: {
-        movieId,
-        genreId,
-      },
-    });
-  }
-
-  async remove(movieId: number, genreId: number): Promise<DeleteResult> {
-    const MovieGenre = await this.findOne(movieId, genreId);
-    return this.movieGenreRepository.delete(MovieGenre.id);
+  async relationExists(movie: Movie, directorId: number): Promise<boolean> {
+    return movie.genres.some((a) => a.id === directorId);
   }
 }

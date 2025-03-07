@@ -7,17 +7,20 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { FileService } from '../file/file.service';
 import { ActorService } from './actor.service';
+import { ActorQueryDto } from './dto/actor-query.dto';
+import { ActorsQueryDto } from './dto/actors-query.dto';
 import { CreateActorDto } from './dto/create-actor.dto';
 import { UpdateActorDto } from './dto/update-actor.dto';
 import { Actor } from './entities/actor.entity';
-import { FileService } from '../file/file.service';
 
 @Controller({ version: '1', path: 'actors' })
 export class ActorController {
@@ -45,13 +48,16 @@ export class ActorController {
   }
 
   @Get()
-  async findAll(): Promise<Actor[]> {
-    return this.actorService.findAll();
+  async findAll(@Query() query: ActorsQueryDto): Promise<Actor[]> {
+    return this.actorService.findAll(query);
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Actor> {
-    return this.actorService.findOne(+id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: ActorQueryDto,
+  ): Promise<Actor> {
+    return this.actorService.findOne(+id, query);
   }
 
   @Patch(':id')

@@ -1,88 +1,63 @@
 import {
-  BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { Director } from '../director/entities/director.entity';
+import { Movie } from '../movie/entities/movie.entity';
 import { MovieService } from '../movie/movie.service';
 import { DirectorService } from './../director/director.service';
-import { CreateMovieDirectorDto } from './dto/create-movie_director.dto';
-import { MovieDirector } from './entities/movie_director.entity';
 
 @Injectable()
 export class MovieDirectorService {
   constructor(
-    @InjectRepository(MovieDirector)
-    private readonly movieDirectorRepository: Repository<MovieDirector>,
+    @InjectRepository(Movie)
+    private readonly movieRepository: Repository<Movie>,
     private readonly movieService: MovieService,
     private readonly directorService: DirectorService,
   ) {}
 
-  async create(
-    movieId: number,
-    createMovieDirectorDto: CreateMovieDirectorDto,
-  ): Promise<MovieDirector> {
-    // Verifica se o filme e o diretor/diretora existem
-    await this.movieService.findOne(movieId);
-    await this.directorService.findOne(createMovieDirectorDto.directorId);
+  async create(movieId: number, directorId: number): Promise<Movie> {
+    // Verifica se o filme e diretor(a) existem
+    const movie = await this.findMovieWithDirector(movieId);
+    const director = await this.directorService.findOne(directorId);
 
-    // Verifica se o registro já existe
-    const movieGenre = await this.FindOneNoException(
-      movieId,
-      createMovieDirectorDto.directorId,
-    );
-
-    if (movieGenre) {
-      throw new BadRequestException(
-        'Relação entre filme e diretor/diretora já cadastrada.',
+    // Evitar duplicação
+    if (await this.relationExists(movie, directorId)) {
+      throw new ConflictException(
+        'Relação entre filme e diretor(a) já cadastrada.',
       );
     }
 
-    // Cria um novo registro
-    return this.movieDirectorRepository.save({
-      ...createMovieDirectorDto,
-      movieId,
-    });
+    movie.directors.push(director);
+    return this.movieRepository.save(movie);
   }
 
-  async findAll(movieId: number): Promise<MovieDirector[]> {
-    return this.movieDirectorRepository.find({
-      where: {
-        movieId,
-      },
-    });
+  async findAll(movieId: number): Promise<Director[]> {
+    const movie = await this.findMovieWithDirector(movieId);
+    return movie.directors;
   }
 
-  async findOne(movieId: number, directorId: number): Promise<MovieDirector> {
-    try {
-      return await this.movieDirectorRepository.findOneOrFail({
-        where: {
-          movieId,
-          directorId,
-        },
-      });
-    } catch (error) {
+  async findMovieWithDirector(movieId: number): Promise<Movie> {
+    return await this.movieService.findOne(movieId, { include: 'directors' });
+  }
+
+  async remove(movieId: number, directorId: number): Promise<Movie> {
+    const movie = await this.findMovieWithDirector(movieId);
+
+    if (!(await this.relationExists(movie, directorId))) {
       throw new NotFoundException(
-        'Diretor/Diretora do filme não encontrado(a).',
+        'Relação entre filme e diretor(a) não encontrada.',
       );
     }
+
+    movie.directors = movie.directors.filter((a) => a.id !== directorId);
+    return await this.movieRepository.save(movie);
   }
 
-  async FindOneNoException(
-    movieId: number,
-    directorId: number,
-  ): Promise<MovieDirector> {
-    return await this.movieDirectorRepository.findOne({
-      where: {
-        movieId,
-        directorId,
-      },
-    });
-  }
-
-  async remove(movieId: number, directorId: number): Promise<DeleteResult> {
-    const MovieDirector = await this.findOne(movieId, directorId);
-    return this.movieDirectorRepository.delete(MovieDirector.id);
+  async relationExists(movie: Movie, directorId: number): Promise<boolean> {
+    return movie.directors.some((a) => a.id === directorId);
   }
 }

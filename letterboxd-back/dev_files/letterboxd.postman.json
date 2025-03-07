@@ -128,12 +128,26 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/actors",
+							"raw": "{{url}}/actors?description=atriz&order=id:ASC&include=movies",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"actors"
+							],
+							"query": [
+								{
+									"key": "description",
+									"value": "atriz"
+								},
+								{
+									"key": "order",
+									"value": "id:ASC"
+								},
+								{
+									"key": "include",
+									"value": "movies"
+								}
 							]
 						}
 					},
@@ -167,18 +181,18 @@
 							"formdata": [
 								{
 									"key": "name",
-									"value": "Scarlett Johanson",
+									"value": "Fernanda Torres",
 									"type": "text"
 								},
 								{
 									"key": "description",
-									"value": "Atriz americana, famosa por filmes como Vingadores, Lucy, Jojo Rabbit.",
+									"value": "Atriz brasileira, quase ganhou o oscar.",
 									"type": "text"
 								},
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-28-45.png"
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-06 10-16-02.png"
 								}
 							]
 						},
@@ -522,12 +536,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/movies",
+							"raw": "{{url}}/movies?include=actors",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"movies"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "actors"
+								}
 							]
 						}
 					},
@@ -539,13 +559,19 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/movies/13",
+							"raw": "{{url}}/movies/1?include=actors",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"movies",
-								"13"
+								"1"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "actors"
+								}
 							]
 						}
 					},
@@ -691,26 +717,6 @@
 				{
 					"name": "movies / :movieId / actors / :actorId",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movies/1/actors/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movies",
-								"1",
-								"actors",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "movies / :movieId / actors",
-					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -724,14 +730,15 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/movies/2/actors",
+							"raw": "{{url}}/movies/1/actors/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"movies",
-								"2",
-								"actors"
+								"1",
+								"actors",
+								"1"
 							]
 						}
 					},
@@ -784,26 +791,6 @@
 				{
 					"name": "movies / :movieId / directors / :directorId",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/movies/1/directors/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movies",
-								"1",
-								"directors",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "movies / :movieId / directors",
-					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -817,14 +804,15 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/movies/2/directors",
+							"raw": "{{url}}/movies/1/directors/1",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"movies",
-								"2",
-								"directors"
+								"1",
+								"directors",
+								"1"
 							]
 						}
 					},

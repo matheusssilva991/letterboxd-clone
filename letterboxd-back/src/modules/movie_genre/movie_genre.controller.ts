@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
@@ -7,9 +6,8 @@ import {
   ParseIntPipe,
   Post,
 } from '@nestjs/common';
-import { DeleteResult } from 'typeorm';
-import { CreateMovieGenreDto } from './dto/create-movie_genre.dto';
-import { MovieGenre } from './entities/movie_genre.entity';
+import { Genre } from '../genre/entities/genre.entity';
+import { Movie } from '../movie/entities/movie.entity';
 import { MovieGenreService } from './movie_genre.service';
 
 @Controller({ version: '1', path: 'movies' })
@@ -19,31 +17,23 @@ export class MovieGenreController {
   @Post(':movieId/genres')
   async create(
     @Param('movieId', ParseIntPipe) movieId: number,
-    @Body() createMovieGenreDto: CreateMovieGenreDto,
-  ): Promise<MovieGenre> {
-    return this.movieGenreService.create(movieId, createMovieGenreDto);
+    @Param('genreId', ParseIntPipe) genreId: number,
+  ): Promise<Movie> {
+    return this.movieGenreService.create(movieId, genreId);
   }
 
   @Get(':movieId/genres')
   async findAll(
     @Param('movieId', ParseIntPipe) movieId: number,
-  ): Promise<MovieGenre[]> {
+  ): Promise<Genre[]> {
     return this.movieGenreService.findAll(movieId);
-  }
-
-  @Get(':movieId/genres/:genreId')
-  async findOne(
-    @Param('movieId', ParseIntPipe) movieId: number,
-    @Param('genreId', ParseIntPipe) genreId: number,
-  ): Promise<MovieGenre> {
-    return this.movieGenreService.findOne(movieId, genreId);
   }
 
   @Delete(':movieId/genres/:genreId')
   async remove(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Param('genreId', ParseIntPipe) genreId: number,
-  ): Promise<DeleteResult> {
+  ): Promise<Movie> {
     return this.movieGenreService.remove(movieId, genreId);
   }
 }

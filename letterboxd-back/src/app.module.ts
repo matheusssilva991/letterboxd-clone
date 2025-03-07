@@ -23,6 +23,7 @@ import { MovieDirectorModule } from './modules/movie_director/movie_director.mod
 import { MovieGenreModule } from './modules/movie_genre/movie_genre.module';
 import { UserModule } from './modules/user/user.module';
 import { FileModule } from './modules/file/file.module';
+import { MovieReviewModule } from './modules/movie_review/movie_review.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { FileModule } from './modules/file/file.module';
     MovieActorModule,
     MovieDirectorModule,
     MovieGenreModule,
+    MovieReviewModule,
     DirectorModule,
     UserModule,
     FileModule,
