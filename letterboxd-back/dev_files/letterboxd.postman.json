@@ -7,119 +7,6 @@
 	},
 	"item": [
 		{
-			"name": "Genre",
-			"item": [
-				{
-					"name": "genres",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/genres",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"genres"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "genres / :id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/genres/2",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"genres",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "genres",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "Comédia2",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/genres",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"genres"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "genres / :id",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "name",
-									"value": "Drama",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/genres/3",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"genres",
-								"3"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "genres / :id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/genres/4",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"genres",
-								"4"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
 			"name": "Actor",
 			"item": [
 				{
@@ -257,61 +144,16 @@
 			]
 		},
 		{
-			"name": "User",
+			"name": "Auth",
 			"item": [
 				{
-					"name": "users",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/users",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "users / :id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/users/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"users",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "users",
+					"name": "auth / login",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "matheus",
-									"type": "text"
-								},
-								{
-									"key": "username",
-									"value": "matheus",
-									"type": "text"
-								},
+							"mode": "urlencoded",
+							"urlencoded": [
 								{
 									"key": "email",
 									"value": "matheus@email.com",
@@ -321,87 +163,17 @@
 									"key": "password",
 									"value": "123456Mc@",
 									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-05 15-31-07.png"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{url}}/users",
+							"raw": "{{url}}/auth/login",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
-								"users"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "users / :id",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "formdata",
-							"formdata": [
-								{
-									"key": "name",
-									"value": "matheus",
-									"type": "text"
-								},
-								{
-									"key": "username",
-									"value": "matheus",
-									"type": "text"
-								},
-								{
-									"key": "email",
-									"value": "matheus@email.com",
-									"type": "text"
-								},
-								{
-									"key": "password",
-									"value": "123456Mc@",
-									"type": "text"
-								},
-								{
-									"key": "image",
-									"type": "file",
-									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-24-40.png"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/users/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"users",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "actors / :id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{url}}/users/1",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"users",
-								"1"
+								"auth",
+								"login"
 							]
 						}
 					},
@@ -528,6 +300,119 @@
 			]
 		},
 		{
+			"name": "Genre",
+			"item": [
+				{
+					"name": "genres",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "genres / :id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/genres/2",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genres",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "genres",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Comédia2",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/genres",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genres"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "genres / :id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Drama",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/genres/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genres",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "genres / :id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/genres/4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"genres",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Movie",
 			"item": [
 				{
@@ -586,7 +471,7 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "name",
+									"key": "title",
 									"value": "Vingadores",
 									"type": "text"
 								},
@@ -633,7 +518,7 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "name",
+									"key": "title",
 									"value": "Vingadores 2",
 									"type": "text"
 								},
@@ -932,8 +817,171 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users / :id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "matheus@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456Mc@",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-05 15-31-07.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users / :id",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "matheus",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "matheus@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456Mc@",
+									"type": "text"
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/matheus/Imagens/Capturas de tela/Captura de tela de 2025-03-01 12-24-40.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/users/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "actors / :id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{admin_token}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -960,6 +1008,16 @@
 		{
 			"key": "url",
 			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlzcyI6ImF1dGgtc2VydmljZSIsImlhdCI6MTc0MTM3NDkwOTE2MiwiZW1haWwiOiJtYXRoZXVzQGVtYWlsLmNvbSIsInVzZXJuYW1lIjoibWF0aGV1cyIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzQxMzc0OTk1NTYyfQ.i7zK5_Hktl7_wAJTDRMHvK5BiR081hiKQ5r6KGx1HO0",
+			"type": "string"
+		},
+		{
+			"key": "user_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlzcyI6ImF1dGgtc2VydmljZSIsImlhdCI6MTc0MTM3NDkwOTE2MiwiZW1haWwiOiJtYXRoZXVzQGVtYWlsLmNvbSIsInVzZXJuYW1lIjoibWF0aGV1cyIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzQxMzc0OTk1NTYyfQ.i7zK5_Hktl7_wAJTDRMHvK5BiR081hiKQ5r6KGx1HO0",
 			"type": "string"
 		}
 	]

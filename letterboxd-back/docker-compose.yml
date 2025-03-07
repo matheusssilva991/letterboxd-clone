@@ -17,6 +17,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
       THROTTLER_TTL: ${THROTTLER_TTL:-60}
       THROTTLER_LIMIT: ${THROTTLER_LIMIT:-50}
+      SECRET_KEY: ${SECRET_KEY:-letterboxd}
+      EXPIRES_IN: ${EXPIRES_IN:-1 day}
     ports:
       - "3000:3000"
     volumes:

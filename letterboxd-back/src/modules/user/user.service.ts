@@ -2,14 +2,17 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { UpdatePasswordDto } from '../auth/dto/update-password.dto';
 import { FileService } from '../file/file.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { LoginUserDto } from '../auth/dto/login-user.dto';
 
 @Injectable()
 export class UserService {
@@ -52,6 +55,14 @@ export class UserService {
     } catch (error) {
       throw new NotFoundException('Usuário não encontrado.');
     }
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({ where: { email } });
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    return this.userRepository.findOne({ where: { username } });
   }
 
   async update(
@@ -102,19 +113,60 @@ export class UserService {
     return await this.userRepository.delete(id);
   }
 
-  async findByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({ where: { email } });
-  }
-
-  async findByUsername(username: string): Promise<User> {
-    return this.userRepository.findOne({ where: { username } });
-  }
-
   async emailAlreadyExists(email: string): Promise<boolean> {
     return !!(await this.findByEmail(email));
   }
 
   async usernameAlreadyExists(username: string): Promise<boolean> {
     return !!(await this.findByUsername(username));
+  }
+
+  async validateLogin({
+    email,
+    password,
+  }: LoginUserDto): Promise<Omit<User, 'password'>> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password', 'username', 'role'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('E-mail não encontrado.');
+    }
+
+    const areEqual = await bcrypt.compare(password, user.password);
+
+    if (!areEqual) {
+      throw new UnauthorizedException('Senha incorreta.');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...rest } = user;
+    return rest;
+  }
+
+  async updatePassword(
+    id: number,
+    payload: UpdatePasswordDto,
+  ): Promise<UpdateResult> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+      select: { password: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Credenciais inválidas.');
+    }
+
+    // compare passwords
+    const areEqual = await bcrypt.compare(payload.old_password, user.password);
+    if (!areEqual) {
+      throw new UnauthorizedException('Credenciais inválidas.');
+    }
+
+    payload.new_password = await bcrypt.hash(payload.new_password, 10);
+    user.password = payload.new_password;
+
+    return await this.userRepository.update(id, user);
   }
 }

@@ -9,11 +9,13 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { FileService } from '../file/file.service';
 import { ActorService } from './actor.service';
 import { ActorQueryDto } from './dto/actor-query.dto';
@@ -48,6 +50,7 @@ export class ActorController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: ActorsQueryDto): Promise<Actor[]> {
     return this.actorService.findAll(query);
   }
