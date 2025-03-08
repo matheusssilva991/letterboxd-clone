@@ -36,10 +36,12 @@ export class CreateUserDto {
   )
   password: string;
 
+  @IsString({ message: 'Informe um cargo válido.' })
+  @IsEmpty({ message: 'Não é necessário informar este campo.' })
+  @IsOptional({ message: 'Cargo é opcional.' })
   @IsEnum(() => RoleEnum, {
     message: `Informe um cargo válido: ${Object.values(RoleEnum).join(', ')}.`,
   })
-  @IsOptional({ message: 'Cargo é opcional.' })
   role: RoleEnum;
 
   @IsString({ message: 'Informe um caminho de imagem válido.' })

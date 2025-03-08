@@ -839,6 +839,24 @@
 					"response": []
 				},
 				{
+					"name": "users / me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/me",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "users / :id",
 					"request": {
 						"method": "GET",
@@ -904,7 +922,7 @@
 					"response": []
 				},
 				{
-					"name": "users / :id",
+					"name": "users / me",
 					"request": {
 						"method": "PATCH",
 						"header": [],
@@ -939,13 +957,42 @@
 							]
 						},
 						"url": {
-							"raw": "{{url}}/users/1",
+							"raw": "{{url}}/users/me",
 							"host": [
 								"{{url}}"
 							],
 							"path": [
 								"users",
-								"1"
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "users / :id / role",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "role",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/users/1/role",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"1",
+								"role"
 							]
 						}
 					},
