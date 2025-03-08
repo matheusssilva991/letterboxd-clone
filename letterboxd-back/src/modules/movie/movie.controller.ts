@@ -9,11 +9,16 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { Roles } from '../../common/decorators/role.decorator';
+import { RoleEnum } from '../../common/enums/role.enum';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { FileService } from '../file/file.service';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { MovieQueryDto } from './dto/movie-query.dto';
@@ -30,6 +35,8 @@ export class MovieController {
   ) {}
 
   @Post()
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('movies')))
   async create(
     @UploadedFile() image: Express.Multer.File,
@@ -62,6 +69,8 @@ export class MovieController {
   }
 
   @Patch(':id')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('movies')))
   async update(
     @UploadedFile() image: Express.Multer.File,
@@ -75,6 +84,8 @@ export class MovieController {
   }
 
   @Delete(':id')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.movieService.remove(+id);
   }

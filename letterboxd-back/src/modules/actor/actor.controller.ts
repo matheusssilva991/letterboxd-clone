@@ -15,7 +15,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { Roles } from '../../common/decorators/role.decorator';
+import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { FileService } from '../file/file.service';
 import { ActorService } from './actor.service';
 import { ActorQueryDto } from './dto/actor-query.dto';
@@ -32,6 +35,8 @@ export class ActorController {
   ) {}
 
   @Post()
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('actors')))
   async create(
     @UploadedFile() image: Express.Multer.File,
@@ -64,6 +69,8 @@ export class ActorController {
   }
 
   @Patch(':id')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('actors')))
   async update(
     @UploadedFile() image: Express.Multer.File,
@@ -77,6 +84,8 @@ export class ActorController {
   }
 
   @Delete(':id')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.actorService.remove(+id);
   }

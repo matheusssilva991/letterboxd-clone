@@ -7,8 +7,13 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
+import { Roles } from '../../common/decorators/role.decorator';
+import { RoleEnum } from '../../common/enums/role.enum';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { CreateGenreDto } from './dto/create-genre.dto';
 import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
@@ -19,6 +24,8 @@ export class GenreController {
   constructor(private readonly genreService: GenreService) {}
 
   @Post()
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async create(@Body() createGenreDto: CreateGenreDto): Promise<Genre> {
     return this.genreService.create(createGenreDto);
   }
@@ -34,6 +41,8 @@ export class GenreController {
   }
 
   @Patch(':id')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGenreDto: UpdateGenreDto,
@@ -42,6 +51,8 @@ export class GenreController {
   }
 
   @Delete(':id')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.genreService.remove(+id);
   }

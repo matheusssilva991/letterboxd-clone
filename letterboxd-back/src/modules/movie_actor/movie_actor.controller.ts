@@ -5,7 +5,12 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from '../../common/decorators/role.decorator';
+import { RoleEnum } from '../../common/enums/role.enum';
+import { JwtAuthGuard } from '../../common/guards/auth.guard';
+import { RoleGuard } from '../../common/guards/role.guard';
 import { Actor } from '../actor/entities/actor.entity';
 import { Movie } from '../movie/entities/movie.entity';
 import { MovieActorService } from './movie_actor.service';
@@ -15,6 +20,8 @@ export class MovieActorController {
   constructor(private readonly movieActorService: MovieActorService) {}
 
   @Post(':movieId/actors/:actorId')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async create(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Param('actorId', ParseIntPipe) actorId: number,
@@ -30,6 +37,8 @@ export class MovieActorController {
   }
 
   @Delete(':movieId/actors/:actorId')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
   async remove(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Param('actorId', ParseIntPipe) actorId: number,
