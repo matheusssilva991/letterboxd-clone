@@ -15,6 +15,12 @@ export class MovieReview {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;
 
+  @Column({ name: 'stars', type: 'int', unsigned: true, nullable: false })
+  stars: number;
+
+  @Column({ name: 'comment', type: 'varchar', length: 255, nullable: false })
+  comment: string;
+
   @Column({ name: 'movie_id', type: 'int', unsigned: true })
   movieId: number;
 

@@ -1,8 +1,15 @@
-import { IsEmpty, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmpty,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+} from 'class-validator';
 
 export class CreateActorDto {
   @IsString({ message: 'Informe um nome válido.' })
   @IsNotEmpty({ message: 'Informe um nome.' })
+  @Length(1, 255, { message: 'O nome deve ter entre 1 e 255 caracteres.' })
   name: string;
 
   @IsString({ message: 'Informe uma descrição válida.' })

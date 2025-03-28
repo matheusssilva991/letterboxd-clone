@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { MovieService } from '../movie/movie.service';
 import { UserService } from '../user/user.service';
 import { CreateMovieReviewDto } from './dto/create-movie_review.dto';
+import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
 import { MovieReview } from './entities/movie_actor.entity';
 
 @Injectable()
@@ -17,16 +18,18 @@ export class MovieReviewService {
 
   async create(
     movieId: number,
+    userId: number,
     createMovieReviewDto: CreateMovieReviewDto,
   ): Promise<MovieReview> {
     // Verifica se o filme e o usuário existem
     await this.movieService.findOne(movieId);
-    await this.userService.findOne(createMovieReviewDto.userId);
+    await this.userService.findOne(userId);
 
     // Cria um novo registro
     return this.movieReviewRepository.save({
       ...createMovieReviewDto,
       movieId,
+      userId,
     });
   }
 
@@ -53,6 +56,14 @@ export class MovieReviewService {
     } catch (error) {
       throw new NotFoundException('Critica não encontrada.');
     }
+  }
+
+  async update(
+    id: number,
+    updateMovieReviewDto: UpdateMovieReviewDto,
+  ): Promise<UpdateResult> {
+    await this.findOne(id);
+    return this.movieReviewRepository.update(id, updateMovieReviewDto);
   }
 
   async remove(id: number): Promise<DeleteResult> {

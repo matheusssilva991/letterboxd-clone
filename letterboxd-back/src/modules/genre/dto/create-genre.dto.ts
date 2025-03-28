@@ -1,8 +1,9 @@
-import { IsEmpty, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmpty, IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateGenreDto {
   @IsString({ message: 'Informe um nome válido.' })
   @IsNotEmpty({ message: 'Informe um nome.' })
+  @Length(1, 255, { message: 'O nome deve ter entre 1 e 255 caracteres.' })
   name: string;
 
   @IsEmpty()

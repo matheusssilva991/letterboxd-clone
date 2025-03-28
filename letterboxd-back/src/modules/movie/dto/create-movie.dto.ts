@@ -7,11 +7,13 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Length,
 } from 'class-validator';
 
 export class CreateMovieDto {
   @IsString({ message: 'Informe um titulo válido.' })
   @IsNotEmpty({ message: 'Informe um titulo.' })
+  @Length(1, 255, { message: 'O titulo deve ter entre 1 e 255 caracteres.' })
   title: string;
 
   @IsString({ message: 'Informe uma sinopse válida.' })

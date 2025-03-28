@@ -19,7 +19,7 @@ import { MovieGenreService } from './movie_genre.service';
 export class MovieGenreController {
   constructor(private readonly movieGenreService: MovieGenreService) {}
 
-  @Post(':movieId/genres')
+  @Post(':movieId/genres/:genreId')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   async create(
