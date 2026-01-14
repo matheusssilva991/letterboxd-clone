@@ -22,9 +22,14 @@ Backend da aplicação Letterboxd Clone desenvolvido com **NestJS**. Esta API RE
 - 🗄️ **TypeORM** para interação com banco de dados
 - 🚦 **Rate Limiting** para proteção contra abuso
 - 📁 **Upload de arquivos** para imagens de filmes e perfis
-- 🔄 **Versionamento de API**
+- 🔄 **Versionamento de API** (v1)
 - 📊 **Logging** de requisições
 - ✅ **Validação** automática de DTOs
+- 📚 **Documentação Swagger** interativa
+- 🎯 **Response DTOs padronizados** para todas as operações
+- ⚡ **Paginação automática** em listagens
+- 🛡️ **Exception Filter global** para tratamento de erros
+- 🔒 **Serialização automática** para ocultar campos sensíveis
 
 ## 🏗️ Arquitetura
 
@@ -324,53 +329,97 @@ UPLOAD_DIR=./uploads          # Diretório para arquivos enviados
 MAX_FILE_SIZE=5242880         # Tamanho máximo em bytes (5MB)
 ```
 
+## � Documentação Interativa (Swagger)
+
+A API possui documentação interativa completa via **Swagger UI**.
+
+### 🌐 Acessando o Swagger
+
+Após iniciar a aplicação, acesse:
+
+```
+http://localhost:3000/api/docs
+```
+
+O Swagger oferece:
+
+- 📖 **Documentação completa** de todos os endpoints
+- 🧪 **Teste interativo** das rotas diretamente no navegador
+- 📋 **Schemas** de todas as requisições e respostas
+- 🔐 **Autenticação JWT** integrada (clique em "Authorize")
+- 📝 **Exemplos** de payloads para cada endpoint
+
+### Como usar o Swagger
+
+1. Acesse `http://localhost:3000/api/docs`
+2. Para testar endpoints protegidos:
+   - Faça login em `/auth/login` para obter o token
+   - Clique no botão **"Authorize"** no topo da página
+   - Cole o token JWT (sem "Bearer")
+   - Clique em **"Authorize"** e feche o modal
+3. Agora você pode testar qualquer endpoint diretamente no Swagger!
+
 ## 📡 Endpoints Principais da API
 
-A API segue o padrão REST e está versionada. Todos os endpoints começam com `/api`.
+A API segue o padrão REST e está versionada em **v1**. Todos os endpoints começam com `/api/v1`.
+
+> 💡 **Dica**: Para detalhes completos de todos os endpoints, schemas e poder testá-los interativamente, acesse a [Documentação Swagger](#-documentação-interativa-swagger).
 
 ### Autenticação
 
 | Método | Endpoint | Descrição | Autenticação |
 |--------|----------|-----------|--------------|
-| POST | `/api/auth/login` | Fazer login e obter token JWT | Não |
-| POST | `/api/auth/register` | Registrar novo usuário | Não |
-| PUT | `/api/auth/password` | Atualizar senha do usuário | Sim |
+| POST | `/api/v1/auth/login` | Fazer login e obter token JWT | Não |
+| POST | `/api/v1/users` | Registrar novo usuário | Não |
+| PATCH | `/api/v1/auth/password` | Atualizar senha do usuário | Sim |
 
 ### Usuários
 
 | Método | Endpoint | Descrição | Autenticação |
 |--------|----------|-----------|--------------|
-| GET | `/api/users` | Listar todos os usuários | Sim |
-| GET | `/api/users/:id` | Obter detalhes de um usuário | Sim |
-| POST | `/api/users` | Criar novo usuário | Admin |
-| PUT | `/api/users/:id` | Atualizar usuário | Admin/Owner |
-| DELETE | `/api/users/:id` | Deletar usuário | Admin |
+| GET | `/api/v1/users` | Listar todos os usuários (paginado) | Não |
+| GET | `/api/v1/users/:id` | Obter detalhes de um usuário | Não |
+| GET | `/api/v1/users/me` | Obter perfil do usuário autenticado | Sim |
+| POST | `/api/v1/users` | Registrar novo usuário | Não |
+| PATCH | `/api/v1/users/me` | Atualizar perfil próprio | Sim |
+| PATCH | `/api/v1/users/:id/role` | Atualizar papel do usuário | Admin |
+| DELETE | `/api/v1/users/:id` | Deletar usuário | Admin |
 
 ### Filmes
 
 | Método | Endpoint | Descrição | Autenticação |
 |--------|----------|-----------|--------------|
-| GET | `/api/movies` | Listar filmes (com filtros e paginação) | Não |
-| GET | `/api/movies/:id` | Obter detalhes de um filme | Não |
-| POST | `/api/movies` | Adicionar novo filme | Admin |
-| PUT | `/api/movies/:id` | Atualizar filme | Admin |
-| DELETE | `/api/movies/:id` | Deletar filme | Admin |
+| GET | `/api/v1/movies` | Listar filmes (com filtros e paginação) | Não |
+| GET | `/api/v1/movies/:id` | Obter detalhes de um filme | Não |
+| POST | `/api/v1/movies` | Adicionar novo filme | Admin |
+| PATCH | `/api/v1/movies/:id` | Atualizar filme | Admin |
+| DELETE | `/api/v1/movies/:id` | Deletar filme | Admin |
+| GET | `/api/v1/movies/:id/actors` | Listar atores de um filme | Não |
+| POST | `/api/v1/movies/:id/actors/:actorId` | Adicionar ator ao filme | Admin |
+| DELETE | `/api/v1/movies/:id/actors/:actorId` | Remover ator do filme | Admin |
+| GET | `/api/v1/movies/:id/directors` | Listar diretores de um filme | Não |
+| POST | `/api/v1/movies/:id/directors/:directorId` | Adicionar diretor ao filme | Admin |
+| DELETE | `/api/v1/movies/:id/directors/:directorId` | Remover diretor do filme | Admin |
+| GET | `/api/v1/movies/:id/genres` | Listar gêneros de um filme | Não |
+| POST | `/api/v1/movies/:id/genres/:genreId` | Adicionar gênero ao filme | Admin |
+| DELETE | `/api/v1/movies/:id/genres/:genreId` | Remover gênero do filme | Admin |
 
 ### Avaliações
 
 | Método | Endpoint | Descrição | Autenticação |
 |--------|----------|-----------|--------------|
-| GET | `/api/reviews` | Listar avaliações | Não |
-| GET | `/api/reviews/:id` | Obter avaliação específica | Não |
-| POST | `/api/reviews` | Criar nova avaliação | Sim |
-| PUT | `/api/reviews/:id` | Atualizar avaliação própria | Owner |
-| DELETE | `/api/reviews/:id` | Deletar avaliação própria | Owner/Admin |
+| GET | `/api/v1/movies/:movieId/reviews` | Listar avaliações de um filme | Não |
+| GET | `/api/v1/reviews/my-reviews` | Listar minhas avaliações | Sim |
+| GET | `/api/v1/reviews/:id` | Obter avaliação específica | Não |
+| POST | `/api/v1/movies/:movieId/reviews` | Criar nova avaliação | Sim |
+| PATCH | `/api/v1/reviews/:id` | Atualizar avaliação própria | Owner/Admin |
+| DELETE | `/api/v1/reviews/:id` | Deletar avaliação própria | Owner/Admin |
 
 ### Outros Endpoints
 
-- **Atores**: `/api/actors` (GET, POST, PUT, DELETE)
-- **Diretores**: `/api/directors` (GET, POST, PUT, DELETE)
-- **Gêneros**: `/api/genres` (GET, POST, PUT, DELETE)
+- **Atores**: `/api/v1/actors` (GET, POST, PATCH, DELETE)
+- **Diretores**: `/api/v1/directors` (GET, POST, PATCH, DELETE)
+- **Gêneros**: `/api/v1/genres` (GET, POST, PATCH, DELETE)
 
 ### Parâmetros de Query Comuns
 
@@ -382,23 +431,195 @@ A API segue o padrão REST e está versionada. Todos os endpoints começam com `
 ?title=Matrix        # Filtro por título (busca parcial)
 ```
 
-### Exemplo de Requisição
+### Exemplos de Requisição e Resposta
+
+#### Login
+
+**Requisição:**
 
 ```bash
-# Login
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:3000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"user@example.com","password":"senha123"}'
+```
 
-# Listar filmes com filtros
-curl http://localhost:3000/api/movies?title=matrix&limit=5&include=actors,genres
+**Resposta:**
 
-# Criar avaliação (com token)
-curl -X POST http://localhost:3000/api/reviews \
+```json
+{
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+#### Listar filmes com paginação
+
+**Requisição:**
+
+```bash
+curl "http://localhost:3000/api/v1/movies?page=1&limit=5&title=matrix&include=actors,genres"
+```
+
+**Resposta:**
+
+```json
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "The Matrix",
+      "synopsis": "Um hacker descobre a verdade sobre sua realidade...",
+      "releaseDate": "1999-03-31",
+      "duration": 136,
+      "imagePath": "uploads/movies/matrix.jpg",
+      "actors": [
+        { "id": 1, "name": "Keanu Reeves" },
+        { "id": 2, "name": "Laurence Fishburne" }
+      ],
+      "genres": [
+        { "id": 1, "name": "Ficção Científica" },
+        { "id": 2, "name": "Ação" }
+      ]
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "limit": 5,
+    "totalPages": 1,
+    "hasNext": false,
+    "hasPrevious": false
+  }
+}
+```
+
+#### Criar avaliação
+
+**Requisição:**
+
+```bash
+curl -X POST http://localhost:3000/api/v1/movies/1/reviews \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer SEU_TOKEN_JWT" \
-  -d '{"movieId":1,"rating":5,"comment":"Excelente filme!"}'
+  -d '{"stars":5,"comment":"Excelente filme!"}'
 ```
+
+**Resposta:**
+
+```json
+{
+  "id": 1,
+  "stars": 5,
+  "comment": "Excelente filme!",
+  "movieId": 1,
+  "userId": 1,
+  "movie": {
+    "id": 1,
+    "title": "The Matrix"
+  },
+  "user": {
+    "id": 1,
+    "name": "João Silva",
+    "username": "joaosilva"
+  }
+}
+```
+
+#### Atualizar filme (resposta padronizada)
+
+**Requisição:**
+
+```bash
+curl -X PATCH http://localhost:3000/api/v1/movies/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN_JWT" \
+  -d '{"title":"Matrix Reloaded"}'
+```
+
+**Resposta:**
+
+```json
+{
+  "success": true,
+  "message": "Recurso atualizado com sucesso",
+  "affected": 1
+}
+```
+
+## 🐛 Troubleshooting
+
+### Problemas Comuns
+
+#### Erro: "Cannot connect to MySQL server"
+
+**Causa**: O container do MySQL ainda não está pronto.
+
+**Solução**:
+
+```bash
+# Aguarde alguns segundos e tente novamente
+docker-compose logs mysql
+
+# Ou reinicie os containers
+docker-compose restart
+```
+
+#### Erro: "Port 3000 already in use"
+
+**Causa**: Outra aplicação está usando a porta 3000.
+
+**Solução**:
+
+```bash
+# Altere a porta no .env
+PORT=3001
+
+# Ou mate o processo na porta 3000
+lsof -ti:3000 | xargs kill -9
+```
+
+#### Erro: "JWT must be provided"
+
+**Causa**: Token de autenticação não foi enviado ou está inválido.
+
+**Solução**:
+
+1. Faça login em `/api/v1/auth/login` para obter um token válido
+2. Inclua o token no header: `Authorization: Bearer SEU_TOKEN`
+3. No Swagger, clique em "Authorize" e cole o token
+
+#### Containers não iniciam
+
+**Solução**:
+
+```bash
+# Limpe tudo e comece do zero
+docker-compose down -v
+docker system prune -a
+docker-compose up -d --build
+```
+
+#### Upload de arquivo falha
+
+**Causa**: Diretório de uploads não tem permissão de escrita.
+
+**Solução**:
+
+```bash
+# Crie o diretório com permissões corretas
+mkdir -p uploads/movies uploads/actors uploads/directors uploads/users
+chmod -R 755 uploads/
+```
+
+#### Erro de validação em DTOs
+
+**Causa**: Payload enviado não está no formato esperado.
+
+**Solução**:
+
+1. Verifique a documentação Swagger em `/api/docs`
+2. Confira os schemas de requisição
+3. Certifique-se de enviar todos os campos obrigatórios
+4. Valide os tipos de dados (number, string, boolean, etc)
 
 ## 🧪 Testes
 
