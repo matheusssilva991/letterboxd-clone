@@ -34,7 +34,7 @@ export class MovieReview {
   @JoinColumn({ name: 'movie_id' })
   movie: Movie;
 
-  @ManyToOne(() => User, (actor) => actor.movieReviews, {
+  @ManyToOne(() => User, (user) => user.movieReviews, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })

@@ -55,7 +55,6 @@ export class ActorController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async findAll(@Query() query: ActorsQueryDto): Promise<Actor[]> {
     return this.actorService.findAll(query);
   }

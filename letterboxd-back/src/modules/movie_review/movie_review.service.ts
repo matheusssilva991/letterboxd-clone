@@ -5,7 +5,7 @@ import { MovieService } from '../movie/movie.service';
 import { UserService } from '../user/user.service';
 import { CreateMovieReviewDto } from './dto/create-movie_review.dto';
 import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
-import { MovieReview } from './entities/movie_actor.entity';
+import { MovieReview } from './entities/movie_review.entity';
 
 @Injectable()
 export class MovieReviewService {
@@ -41,12 +41,12 @@ export class MovieReviewService {
     });
   }
 
-  async findAllByUser(movieId: number, userId: number): Promise<MovieReview[]> {
+  async findAllByUser(userId: number): Promise<MovieReview[]> {
     return await this.movieReviewRepository.find({
       where: {
-        movieId,
         userId,
       },
+      relations: ['movie'],
     });
   }
 

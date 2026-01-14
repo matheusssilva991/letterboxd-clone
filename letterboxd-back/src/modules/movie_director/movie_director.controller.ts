@@ -11,7 +11,7 @@ import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
-import { Actor } from '../actor/entities/actor.entity';
+import { Director } from '../director/entities/director.entity';
 import { Movie } from '../movie/entities/movie.entity';
 import { MovieDirectorService } from './movie_director.service';
 
@@ -32,7 +32,7 @@ export class MovieDirectorController {
   @Get(':movieId/directors')
   async findAll(
     @Param('movieId', ParseIntPipe) movieId: number,
-  ): Promise<Actor[]> {
+  ): Promise<Director[]> {
     return this.movieDirectorService.findAll(movieId);
   }
 

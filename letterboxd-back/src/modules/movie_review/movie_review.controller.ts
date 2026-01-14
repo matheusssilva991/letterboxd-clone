@@ -19,15 +19,15 @@ import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { User } from '../user/entities/user.entity';
 import { CreateMovieReviewDto } from './dto/create-movie_review.dto';
-import { MovieReview } from './entities/movie_actor.entity';
+import { MovieReview } from './entities/movie_review.entity';
 import { MovieReviewService } from './movie_review.service';
 import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
 
-@Controller({ version: '1', path: 'movies' })
+@Controller({ version: '1' })
 export class MovieReviewController {
   constructor(private readonly movieReviewService: MovieReviewService) {}
 
-  @Post(':movieId/reviews')
+  @Post('movies/:movieId/reviews')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   async create(
@@ -44,7 +44,7 @@ export class MovieReviewController {
     );
   }
 
-  @Get(':movieId/reviews')
+  @Get('movies/:movieId/reviews')
   async findAll(
     @Param('movieId', ParseIntPipe) movieId: number,
   ): Promise<MovieReview[]> {
@@ -54,23 +54,20 @@ export class MovieReviewController {
   @Get('reviews/my-reviews')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async findAllByUser(
-    @Param('movieId', ParseIntPipe) movieId: number,
-    @Req() req: Request,
-  ): Promise<MovieReview[]> {
+  async findAllByUser(@Req() req: Request): Promise<MovieReview[]> {
     const user = req.user as User;
     const userId = user.id;
-    return this.movieReviewService.findAllByUser(movieId, userId);
+    return this.movieReviewService.findAllByUser(userId);
   }
 
-  @Get(':movieId/reviews')
+  @Get('reviews/:id')
   async findOne(
-    @Param('movieId', ParseIntPipe) movieId: number,
+    @Param('id', ParseIntPipe) id: number,
   ): Promise<MovieReview> {
-    return this.movieReviewService.findOne(movieId);
+    return this.movieReviewService.findOne(id);
   }
 
-  @Patch(':movieId/reviews/:id')
+  @Patch('reviews/:id')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   async update(

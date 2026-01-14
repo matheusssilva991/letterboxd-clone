@@ -11,7 +11,7 @@ import {
 import { Actor } from '../../actor/entities/actor.entity';
 import { Director } from '../../director/entities/director.entity';
 import { Genre } from '../../genre/entities/genre.entity';
-import { MovieReview } from '../../movie_review/entities/movie_actor.entity';
+import { MovieReview } from '../../movie_review/entities/movie_review.entity';
 
 @Entity({ name: 'movie', orderBy: { id: 'ASC' } })
 export class Movie {
