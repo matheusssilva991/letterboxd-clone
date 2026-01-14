@@ -29,6 +29,13 @@ export class MovieGenreController {
   @Post(':movieId/genres/:genreId')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Adicionar um gênero ao filme' })
+  @ApiResponse({ status: 201, description: 'Gênero adicionado ao filme com sucesso', type: Movie })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Filme ou gênero não encontrado' })
   async create(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Param('genreId', ParseIntPipe) genreId: number,
@@ -37,6 +44,9 @@ export class MovieGenreController {
   }
 
   @Get(':movieId/genres')
+  @ApiOperation({ summary: 'Buscar todos os gêneros de um filme específico' })
+  @ApiResponse({ status: 200, description: 'Lista de gêneros recuperada com sucesso', type: [Genre] })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async findAll(
     @Param('movieId', ParseIntPipe) movieId: number,
   ): Promise<Genre[]> {
@@ -46,6 +56,12 @@ export class MovieGenreController {
   @Delete(':movieId/genres/:genreId')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Remover um gênero do filme' })
+  @ApiResponse({ status: 200, description: 'Gênero removido do filme com sucesso', type: Movie })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Filme ou gênero não encontrado' })
   async remove(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Param('genreId', ParseIntPipe) genreId: number,

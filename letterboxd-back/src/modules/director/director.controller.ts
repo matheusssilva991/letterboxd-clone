@@ -49,6 +49,13 @@ export class DirectorController {
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('directors')))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Criar um novo diretor' })
+  @ApiResponse({ status: 201, description: 'Diretor criado com sucesso', type: Director })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
   async create(
     @UploadedFile() image: Express.Multer.File,
     @Body() createDirectorDto: CreateDirectorDto,
@@ -66,6 +73,8 @@ export class DirectorController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Buscar todos os diretores com paginação' })
+  @ApiResponse({ status: 200, description: 'Lista de diretores recuperada com sucesso', type: PaginatedResponseDto<Director> })
   async findAll(
     @Query() pagination: PaginationDto,
     @Query() query: DirectorsQueryDto,
@@ -77,6 +86,9 @@ export class DirectorController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Buscar um diretor específico por ID' })
+  @ApiResponse({ status: 200, description: 'Diretor recuperado com sucesso', type: Director })
+  @ApiResponse({ status: 404, description: 'Diretor não encontrado' })
   async findOne(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: DirectorQueryDto,
@@ -88,6 +100,14 @@ export class DirectorController {
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('directors')))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Atualizar um diretor' })
+  @ApiResponse({ status: 200, description: 'Diretor atualizado com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Diretor não encontrado' })
   async update(
     @UploadedFile() image: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
@@ -104,6 +124,12 @@ export class DirectorController {
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deletar um diretor' })
+  @ApiResponse({ status: 200, description: 'Diretor deletado com sucesso', type: DeleteResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Diretor não encontrado' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
     const result = await this.directorService.remove(+id);
     return new DeleteResponseDto(result.affected);

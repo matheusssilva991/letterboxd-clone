@@ -30,7 +30,6 @@ import { RoleGuard } from '../../common/guards/role.guard';
 import { User } from '../user/entities/user.entity';
 import { CreateMovieReviewDto } from './dto/create-movie_review.dto';
 import { ReviewResponseDto } from './dto/review-response.dto';
-import { MovieReview } from './entities/movie_review.entity';
 import { MovieReviewService } from './movie_review.service';
 import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
 
@@ -42,6 +41,12 @@ export class MovieReviewController {
   @Post('movies/:movieId/reviews')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Criar uma avaliação para um filme' })
+  @ApiResponse({ status: 201, description: 'Avaliação criada com sucesso', type: ReviewResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async create(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Body() createMovieReviewDto: CreateMovieReviewDto,
@@ -58,6 +63,9 @@ export class MovieReviewController {
   }
 
   @Get('movies/:movieId/reviews')
+  @ApiOperation({ summary: 'Buscar todas as avaliações de um filme específico com paginação' })
+  @ApiResponse({ status: 200, description: 'Lista de avaliações recuperada com sucesso', type: PaginatedResponseDto<ReviewResponseDto> })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async findAll(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Query() pagination: PaginationDto,
@@ -76,6 +84,10 @@ export class MovieReviewController {
   @Get('reviews/my-reviews')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Buscar todas as avaliações do usuário autenticado' })
+  @ApiResponse({ status: 200, description: 'Lista de avaliações do usuário recuperada com sucesso', type: PaginatedResponseDto<ReviewResponseDto> })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
   async findAllByUser(
     @Req() req: Request,
     @Query() pagination: PaginationDto,
@@ -94,6 +106,9 @@ export class MovieReviewController {
   }
 
   @Get('reviews/:id')
+  @ApiOperation({ summary: 'Buscar uma avaliação específica por ID' })
+  @ApiResponse({ status: 200, description: 'Avaliação recuperada com sucesso', type: ReviewResponseDto })
+  @ApiResponse({ status: 404, description: 'Avaliação não encontrada' })
   async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ReviewResponseDto> {
@@ -104,20 +119,23 @@ export class MovieReviewController {
   @Patch('reviews/:id')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Atualizar uma avaliação (apenas proprietário ou admin)' })
+  @ApiResponse({ status: 200, description: 'Avaliação atualizada com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Não é o proprietário da avaliação' })
+  @ApiResponse({ status: 404, description: 'Avaliação não encontrada' })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMovieReviewDto: UpdateMovieReviewDto,
     @Req() req: Request,
   ): Promise<UpdateResponseDto> {
     const user = req.user as User;
-    const userId = user.id;
     const movieReview = await this.movieReviewService.findOne(id);
 
-    if (movieReview.userId !== userId) {
-      throw new UnauthorizedException(
-        'Você não tem permissão para deletar essa crítica.',
-      );
-    }
+    // Verifica permissão usando método privado
+    this.checkOwnership(user, movieReview);
 
     const result = await this.movieReviewService.update(id, updateMovieReviewDto);
     return new UpdateResponseDto(result.affected);
@@ -126,20 +144,45 @@ export class MovieReviewController {
   @Delete('reviews/:id')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deletar uma avaliação (apenas proprietário ou admin)' })
+  @ApiResponse({ status: 200, description: 'Avaliação deletada com sucesso', type: DeleteResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Não é o proprietário da avaliação' })
+  @ApiResponse({ status: 404, description: 'Avaliação não encontrada' })
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
   ): Promise<DeleteResponseDto> {
     const user = req.user as User;
-    const userId = user.id;
     const movieReview = await this.movieReviewService.findOne(id);
 
-    if (movieReview.userId !== userId) {
-      throw new UnauthorizedException(
-        'Você não tem permissão para deletar essa crítica.',
-      );
-    }
+    // Verifica permissão usando método privado
+    this.checkOwnership(user, movieReview);
+
     const result = await this.movieReviewService.remove(id);
     return new DeleteResponseDto(result.affected);
+  }
+
+  /**
+   * Método privado para verificar se o usuário é o proprietário do recurso
+   * Administradores têm permissão automática
+   *
+   * @param user - Usuário autenticado
+   * @param resource - Recurso a ser verificado (deve ter userId)
+   * @throws UnauthorizedException se o usuário não for o proprietário
+   */
+  private checkOwnership(user: User, resource: { userId: number }): void {
+    // Administradores têm acesso total
+    if (user.role === RoleEnum.ADMIN) {
+      return;
+    }
+
+    // Verifica se o usuário é o proprietário
+    if (resource.userId !== user.id) {
+      throw new UnauthorizedException(
+        'Você não tem permissão para acessar/modificar este recurso',
+      );
+    }
   }
 }

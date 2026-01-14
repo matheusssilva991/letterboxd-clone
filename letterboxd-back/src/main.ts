@@ -14,6 +14,7 @@ import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from '@nes
 import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from './common/filters/global-exception.filter';
 
 /**
  * Função de inicialização da aplicação
@@ -25,6 +26,9 @@ async function bootstrap() {
 
   // Cria a instância da aplicação NestJS a partir do módulo raiz
   const app = await NestFactory.create(AppModule);
+
+  // Configura o filtro de exceções global para padronizar respostas de erro
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   // Configura o ClassSerializerInterceptor globalmente para excluir campos sensíveis
   // Utiliza o decorador @Exclude() nas entidades para remover campos como password

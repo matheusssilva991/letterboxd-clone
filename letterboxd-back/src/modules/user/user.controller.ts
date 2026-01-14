@@ -48,6 +48,10 @@ export class UserController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image', multerConfig('users')))
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Criar um novo usuário (registrar)' })
+  @ApiResponse({ status: 201, description: 'Usuário criado com sucesso', type: UserResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
   async create(
     @UploadedFile() image: Express.Multer.File,
     @Body() createUserDto: CreateUserDto,
@@ -70,6 +74,8 @@ export class UserController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Buscar todos os usuários com paginação' })
+  @ApiResponse({ status: 200, description: 'Lista de usuários recuperada com sucesso', type: PaginatedResponseDto<UserResponseDto> })
   async findAll(
     @Query() pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<UserResponseDto>> {
@@ -83,6 +89,10 @@ export class UserController {
   @Get('me')
   @Roles(RoleEnum.ADMIN, RoleEnum.USER)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Buscar perfil do usuário autenticado' })
+  @ApiResponse({ status: 200, description: 'Perfil do usuário recuperado com sucesso', type: UserResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
   async findMe(@Req() request: Request): Promise<UserResponseDto> {
     const user = request.user as User;
     const userData = await this.userService.findOne(user.id);
@@ -90,6 +100,9 @@ export class UserController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Buscar um usuário específico por ID' })
+  @ApiResponse({ status: 200, description: 'Usuário recuperado com sucesso', type: UserResponseDto })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<UserResponseDto> {
@@ -100,6 +113,13 @@ export class UserController {
   @Patch(':id/role')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Atualizar papel do usuário (apenas admin)' })
+  @ApiResponse({ status: 200, description: 'Papel do usuário atualizado com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: Pick<UpdateUserDto, 'role'>,
@@ -112,6 +132,12 @@ export class UserController {
   @Roles(RoleEnum.ADMIN, RoleEnum.USER)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('users')))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Atualizar perfil do usuário autenticado' })
+  @ApiResponse({ status: 200, description: 'Perfil do usuário atualizado com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
   async updateMe(
     @UploadedFile() image: Express.Multer.File,
     @Body() updateUserDto: UpdateUserDto,
@@ -133,6 +159,12 @@ export class UserController {
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deletar um usuário' })
+  @ApiResponse({ status: 200, description: 'Usuário deletado com sucesso', type: DeleteResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
     const result = await this.userService.remove(id);
     return new DeleteResponseDto(result.affected);

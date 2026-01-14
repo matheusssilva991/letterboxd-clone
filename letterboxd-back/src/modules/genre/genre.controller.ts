@@ -37,11 +37,19 @@ export class GenreController {
   @Post()
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Criar um novo gênero' })
+  @ApiResponse({ status: 201, description: 'Gênero criado com sucesso', type: Genre })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
   async create(@Body() createGenreDto: CreateGenreDto): Promise<Genre> {
     return this.genreService.create(createGenreDto);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Buscar todos os gêneros com paginação' })
+  @ApiResponse({ status: 200, description: 'Lista de gêneros recuperada com sucesso', type: PaginatedResponseDto<Genre> })
   async findAll(
     @Query() pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<Genre>> {
@@ -52,6 +60,9 @@ export class GenreController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Buscar um gênero específico por ID' })
+  @ApiResponse({ status: 200, description: 'Gênero recuperado com sucesso', type: Genre })
+  @ApiResponse({ status: 404, description: 'Gênero não encontrado' })
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<Genre> {
     return this.genreService.findOne(+id);
   }
@@ -59,6 +70,13 @@ export class GenreController {
   @Patch(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Atualizar um gênero' })
+  @ApiResponse({ status: 200, description: 'Gênero atualizado com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Gênero não encontrado' })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateGenreDto: UpdateGenreDto,
@@ -70,6 +88,12 @@ export class GenreController {
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deletar um gênero' })
+  @ApiResponse({ status: 200, description: 'Gênero deletado com sucesso', type: DeleteResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Gênero não encontrado' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
     const result = await this.genreService.remove(+id);
     return new DeleteResponseDto(result.affected);

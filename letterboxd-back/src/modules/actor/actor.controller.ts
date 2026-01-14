@@ -49,6 +49,13 @@ export class ActorController {
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('actors')))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Criar um novo ator' })
+  @ApiResponse({ status: 201, description: 'Ator criado com sucesso', type: Actor })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
   async create(
     @UploadedFile() image: Express.Multer.File,
     @Body() createActorDto: CreateActorDto,
@@ -66,6 +73,8 @@ export class ActorController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Buscar todos os atores com paginação' })
+  @ApiResponse({ status: 200, description: 'Lista de atores recuperada com sucesso', type: PaginatedResponseDto<Actor> })
   async findAll(
     @Query() pagination: PaginationDto,
     @Query() query: ActorsQueryDto,
@@ -77,6 +86,9 @@ export class ActorController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Buscar um ator específico por ID' })
+  @ApiResponse({ status: 200, description: 'Ator recuperado com sucesso', type: Actor })
+  @ApiResponse({ status: 404, description: 'Ator não encontrado' })
   async findOne(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: ActorQueryDto,
@@ -88,6 +100,14 @@ export class ActorController {
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('actors')))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Atualizar um ator' })
+  @ApiResponse({ status: 200, description: 'Ator atualizado com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Ator não encontrado' })
   async update(
     @UploadedFile() image: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
@@ -103,6 +123,12 @@ export class ActorController {
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Deletar um ator' })
+  @ApiResponse({ status: 200, description: 'Ator deletado com sucesso', type: DeleteResponseDto })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Ator não encontrado' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
     const result = await this.actorService.remove(+id);
     return new DeleteResponseDto(result.affected);
