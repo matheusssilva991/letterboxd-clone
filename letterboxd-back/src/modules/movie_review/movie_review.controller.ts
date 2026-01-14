@@ -11,6 +11,12 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request } from 'express';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Roles } from '../../common/decorators/role.decorator';
@@ -23,6 +29,7 @@ import { MovieReview } from './entities/movie_review.entity';
 import { MovieReviewService } from './movie_review.service';
 import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
 
+@ApiTags('reviews')
 @Controller({ version: '1' })
 export class MovieReviewController {
   constructor(private readonly movieReviewService: MovieReviewService) {}

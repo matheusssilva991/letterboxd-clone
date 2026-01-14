@@ -11,6 +11,7 @@
 
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 /**
@@ -37,10 +38,43 @@ async function bootstrap() {
   // Exemplo: /users se torna /api/users
   app.setGlobalPrefix('api');
 
+  // Configuração do Swagger para documentação da API
+  const config = new DocumentBuilder()
+    .setTitle('Letterboxd Clone API')
+    .setDescription('API para clone do Letterboxd - Plataforma de reviews de filmes')
+    .setVersion('1.0')
+    .addTag('auth', 'Endpoints de autenticação')
+    .addTag('users', 'Gerenciamento de usuários')
+    .addTag('movies', 'Gerenciamento de filmes')
+    .addTag('actors', 'Gerenciamento de atores')
+    .addTag('directors', 'Gerenciamento de diretores')
+    .addTag('genres', 'Gerenciamento de gêneros')
+    .addTag('reviews', 'Avaliações de filmes')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Insira o token JWT',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document, {
+    customSiteTitle: 'Letterboxd Clone API Docs',
+    customfavIcon: 'https://nestjs.com/img/logo-small.svg',
+    customCss: '.swagger-ui .topbar { display: none }',
+  });
+
   // Inicia o servidor HTTP na porta especificada
   await app.listen(port);
 
   console.log(`🚀 Aplicação rodando em: http://localhost:${port}/api`);
+  console.log(`📚 Documentação Swagger: http://localhost:${port}/api/docs`);
 }
 
 // Executa a função de bootstrap

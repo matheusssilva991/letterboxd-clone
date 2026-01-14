@@ -1,20 +1,21 @@
-version: '3.8'
-
 services:
   app:
-    build: .
+    container_name: letterboxd-backend
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: ${PORT:-3000}
-      REDIS_HOST: ${REDIS_HOST:-redis}
-      REDIS_PORT: ${REDIS_PORT:-6379}
-      MYSQL_HOST: ${MYSQL_HOST:-mysql}
-      MYSQL_PORT: ${MYSQL_PORT:-3306}
-      MYSQL_USER: ${MYSQL_USER:-letterboxd}
-      CACHE_TTL: ${CACHE_TTL:-10}
-      CACHE_MAX: ${CACHE_MAX:-100}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_USERNAME: ${MYSQL_USER:-letterboxd}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-letterboxd}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
+      CACHE_TTL: ${CACHE_TTL:-10}
+      CACHE_MAX: ${CACHE_MAX:-100}
       THROTTLER_TTL: ${THROTTLER_TTL:-60}
       THROTTLER_LIMIT: ${THROTTLER_LIMIT:-50}
       SECRET_KEY: ${SECRET_KEY:-letterboxd}
@@ -25,10 +26,13 @@ services:
       - ./src:/usr/app/src
       - /usr/app/node_modules  # Evita sobrescrever node_modules no container
     depends_on:
-      - redis
-      - mysql
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
       - letterboxd
+    restart: unless-stopped
     logging:  # Configuração de logs para o serviço "app"
       driver: "json-file"
       options:
@@ -36,16 +40,20 @@ services:
         max-file: "3"
 
   mysql:
+    container_name: letterboxd-db
     image: mysql:8.0  # Usando uma versão mais recente
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
       MYSQL_DATABASE: ${MYSQL_DATABASE:-letterboxd}
       MYSQL_USER: ${MYSQL_USER:-letterboxd}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-letterboxd}
+    ports:
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - letterboxd
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -58,11 +66,18 @@ services:
         max-file: "3"
 
   redis:
+    container_name: letterboxd-redis
     image: redis:alpine
+    command: redis-server --save 60 1 --loglevel warning
+    sysctls:
+      - net.core.somaxconn=511
+    ports:
+      - "6379:6379"
     volumes:
       - redis_data:/data
     networks:
       - letterboxd
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s

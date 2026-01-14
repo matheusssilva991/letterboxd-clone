@@ -13,6 +13,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
 import { Roles } from '../../common/decorators/role.decorator';
@@ -27,6 +34,7 @@ import { DirectorsQueryDto } from './dto/directors-query.dto';
 import { UpdateDirectorDto } from './dto/update-director.dto';
 import { Director } from './entities/director.entity';
 
+@ApiTags('directors')
 @Controller({ version: '1', path: 'directors' })
 export class DirectorController {
   constructor(

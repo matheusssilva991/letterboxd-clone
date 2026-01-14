@@ -9,8 +9,15 @@ import {
   Max,
   Min,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMovieReviewDto {
+  @ApiProperty({
+    description: 'Avaliação do filme em estrelas (1 a 5)',
+    example: 5,
+    minimum: 1,
+    maximum: 5,
+  })
   @Type(() => Number)
   @IsInt({ message: 'Numero de estrelas deve ser um número inteiro.' })
   @IsPositive({ message: 'Numero de estrelas deve ser positivo.' })
@@ -19,6 +26,12 @@ export class CreateMovieReviewDto {
   @IsNotEmpty({ message: 'Informe o número de estrelas.' })
   stars: number;
 
+  @ApiProperty({
+    description: 'Comentário sobre o filme',
+    example: 'Um dos melhores filmes que já assisti!',
+    minLength: 1,
+    maxLength: 255,
+  })
   @IsString({ message: 'Comentário deve ser uma string.' })
   @Length(1, 255, { message: 'Comentário deve ter entre 1 e 255 caracteres.' })
   @IsNotEmpty({ message: 'Informe o comentário.' })

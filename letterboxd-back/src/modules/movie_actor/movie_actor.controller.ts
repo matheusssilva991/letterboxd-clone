@@ -7,6 +7,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
@@ -15,6 +21,7 @@ import { Actor } from '../actor/entities/actor.entity';
 import { Movie } from '../movie/entities/movie.entity';
 import { MovieActorService } from './movie_actor.service';
 
+@ApiTags('movies')
 @Controller({ version: '1', path: 'movies' })
 export class MovieActorController {
   constructor(private readonly movieActorService: MovieActorService) {}

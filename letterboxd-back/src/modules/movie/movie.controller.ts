@@ -13,6 +13,13 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import {
+  ApiBearerAuth,
+  ApiConsumes,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
 import { Roles } from '../../common/decorators/role.decorator';
@@ -27,6 +34,7 @@ import { UpdateMovieDto } from './dto/update-movie.dto';
 import { Movie } from './entities/movie.entity';
 import { MovieService } from './movie.service';
 
+@ApiTags('movies')
 @Controller({ version: '1', path: 'movies' })
 export class MovieController {
   constructor(
@@ -38,6 +46,12 @@ export class MovieController {
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('movies')))
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Criar novo filme' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 201, description: 'Filme criado com sucesso', type: Movie })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Acesso negado - Apenas ADMIN' })
   async create(
     @UploadedFile() image: Express.Multer.File,
     @Body() createMovieDto: CreateMovieDto,
@@ -56,11 +70,16 @@ export class MovieController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Listar todos os filmes' })
+  @ApiResponse({ status: 200, description: 'Lista de filmes', type: [Movie] })
   async findAll(@Query() query: MoviesQueryDto): Promise<Movie[]> {
     return this.movieService.findAll(query);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Buscar filme por ID' })
+  @ApiResponse({ status: 200, description: 'Filme encontrado', type: Movie })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async findOne(
     @Param('id', ParseIntPipe) id: number,
     @Query() query: MovieQueryDto,
@@ -72,6 +91,11 @@ export class MovieController {
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @UseInterceptors(FileInterceptor('image', multerConfig('movies')))
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Atualizar filme' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 200, description: 'Filme atualizado com sucesso' })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async update(
     @UploadedFile() image: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
@@ -86,6 +110,10 @@ export class MovieController {
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Deletar filme' })
+  @ApiResponse({ status: 200, description: 'Filme deletado com sucesso' })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
     return this.movieService.remove(+id);
   }

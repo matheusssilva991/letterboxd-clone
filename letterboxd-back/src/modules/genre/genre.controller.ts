@@ -9,6 +9,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
@@ -19,6 +25,7 @@ import { UpdateGenreDto } from './dto/update-genre.dto';
 import { Genre } from './entities/genre.entity';
 import { GenreService } from './genre.service';
 
+@ApiTags('genres')
 @Controller({ version: '1', path: 'genres' })
 export class GenreController {
   constructor(private readonly genreService: GenreService) {}
