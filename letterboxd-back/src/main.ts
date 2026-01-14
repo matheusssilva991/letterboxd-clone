@@ -4,13 +4,14 @@
  * Este arquivo é responsável por:
  * - Inicializar a aplicação NestJS
  * - Configurar pipes globais de validação
+ * - Configurar interceptors globais de serialização
  * - Habilitar versionamento de API
  * - Definir prefixo global das rotas
  * - Iniciar o servidor HTTP
  */
 
-import { ValidationPipe, VersioningType } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
@@ -25,9 +26,30 @@ async function bootstrap() {
   // Cria a instância da aplicação NestJS a partir do módulo raiz
   const app = await NestFactory.create(AppModule);
 
+  // Configura o ClassSerializerInterceptor globalmente para excluir campos sensíveis
+  // Utiliza o decorador @Exclude() nas entidades para remover campos como password
+  app.useGlobalInterceptors(
+    new ClassSerializerInterceptor(app.get(Reflector), {
+      strategy: 'excludeAll',
+      excludeExtraneousValues: true,
+    }),
+  );
+
   // Configura o pipe global de validação para validar automaticamente todos os DTOs
-  // transform: false - Não transforma os payloads automaticamente
-  app.useGlobalPipes(new ValidationPipe({ transform: false }));
+  // transform: true - Transforma os payloads automaticamente para os tipos corretos
+  // whitelist: true - Remove propriedades não definidas nos DTOs
+  // forbidNonWhitelisted: true - Lança erro se houver propriedades não permitidas
+  // transformOptions.enableImplicitConversion: true - Converte tipos primitivos automaticamente
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   // Habilita o versionamento de API através da URI (ex: /api/v1/users)
   app.enableVersioning({

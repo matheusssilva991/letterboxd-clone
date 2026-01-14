@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -21,8 +22,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { DeleteResponseDto } from '../../common/dto/success-response.dto';
+import { UpdateResponseDto } from '../../common/dto/success-response.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
@@ -30,6 +34,7 @@ import { FileService } from '../file/file.service';
 import { RoleGuard } from './../../common/guards/role.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
@@ -46,14 +51,15 @@ export class UserController {
   async create(
     @UploadedFile() image: Express.Multer.File,
     @Body() createUserDto: CreateUserDto,
-  ): Promise<Omit<CreateUserDto, 'password'>> {
+  ): Promise<UserResponseDto> {
     if (image) {
       createUserDto.imagePath = image.path;
     }
 
     try {
       delete createUserDto.role;
-      return await this.userService.create(createUserDto);
+      const user = await this.userService.create(createUserDto);
+      return new UserResponseDto(user);
     } catch (error) {
       if (image) {
         this.fileService.deleteImage(image.path);
@@ -64,23 +70,31 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<Omit<User, 'password'>[]> {
-    return this.userService.findAll();
+  async findAll(
+    @Query() pagination: PaginationDto,
+  ): Promise<PaginatedResponseDto<UserResponseDto>> {
+    const { page, limit, skip, take } = pagination;
+    const [data, total] = await this.userService.findAll(skip, take);
+    const users = data.map((user) => new UserResponseDto(user));
+
+    return new PaginatedResponseDto(users, total, page, limit);
   }
 
   @Get('me')
   @Roles(RoleEnum.ADMIN, RoleEnum.USER)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async findMe(@Req() request: Request): Promise<Omit<User, 'password'>> {
+  async findMe(@Req() request: Request): Promise<UserResponseDto> {
     const user = request.user as User;
-    return this.userService.findOne(user.id);
+    const userData = await this.userService.findOne(user.id);
+    return new UserResponseDto(userData);
   }
 
   @Get(':id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<Omit<User, 'password'>> {
-    return this.userService.findOne(id);
+  ): Promise<UserResponseDto> {
+    const user = await this.userService.findOne(id);
+    return new UserResponseDto(user);
   }
 
   @Patch(':id/role')
@@ -89,8 +103,9 @@ export class UserController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: Pick<UpdateUserDto, 'role'>,
-  ): Promise<UpdateResult> {
-    return this.userService.update(id, { role: updateUserDto.role });
+  ): Promise<UpdateResponseDto> {
+    const result = await this.userService.update(id, { role: updateUserDto.role });
+    return new UpdateResponseDto(result.affected);
   }
 
   @Patch('me')
@@ -101,7 +116,7 @@ export class UserController {
     @UploadedFile() image: Express.Multer.File,
     @Body() updateUserDto: UpdateUserDto,
     @Req() request: Request,
-  ): Promise<UpdateResult> {
+  ): Promise<UpdateResponseDto> {
     const user = request.user as User;
     const id = user.id;
 
@@ -111,13 +126,15 @@ export class UserController {
 
     delete updateUserDto.role;
 
-    return this.userService.update(id, updateUserDto);
+    const result = await this.userService.update(id, updateUserDto);
+    return new UpdateResponseDto(result.affected);
   }
 
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
-    return this.userService.remove(id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
+    const result = await this.userService.remove(id);
+    return new DeleteResponseDto(result.affected);
   }
 }

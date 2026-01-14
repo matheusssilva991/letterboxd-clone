@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 import { RoleEnum } from '../../../common/enums/role.enum';
 import { MovieReview } from '../../movie_review/entities/movie_review.entity';
 
@@ -42,6 +43,7 @@ export class User {
     nullable: false,
     select: false,
   })
+  @Exclude()
   password: string;
 
   @Column({

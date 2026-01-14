@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UseGuards,
@@ -18,13 +19,17 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { DeleteResult, UpdateResult } from 'typeorm';
+import { DeleteResponseDto } from '../../common/dto/success-response.dto';
+import { UpdateResponseDto } from '../../common/dto/success-response.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { RoleGuard } from '../../common/guards/role.guard';
 import { User } from '../user/entities/user.entity';
 import { CreateMovieReviewDto } from './dto/create-movie_review.dto';
+import { ReviewResponseDto } from './dto/review-response.dto';
 import { MovieReview } from './entities/movie_review.entity';
 import { MovieReviewService } from './movie_review.service';
 import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
@@ -41,37 +46,59 @@ export class MovieReviewController {
     @Param('movieId', ParseIntPipe) movieId: number,
     @Body() createMovieReviewDto: CreateMovieReviewDto,
     @Req() req: Request,
-  ): Promise<MovieReview> {
+  ): Promise<ReviewResponseDto> {
     const user = req.user as User;
     const userId = user.id;
-    return this.movieReviewService.create(
+    const review = await this.movieReviewService.create(
       movieId,
       userId,
       createMovieReviewDto,
     );
+    return new ReviewResponseDto(review);
   }
 
   @Get('movies/:movieId/reviews')
   async findAll(
     @Param('movieId', ParseIntPipe) movieId: number,
-  ): Promise<MovieReview[]> {
-    return this.movieReviewService.findAll(movieId);
+    @Query() pagination: PaginationDto,
+  ): Promise<PaginatedResponseDto<ReviewResponseDto>> {
+    const { page, limit, skip, take } = pagination;
+    const [data, total] = await this.movieReviewService.findAll(
+      movieId,
+      skip,
+      take,
+    );
+    const reviews = data.map((review) => new ReviewResponseDto(review));
+
+    return new PaginatedResponseDto(reviews, total, page, limit);
   }
 
   @Get('reviews/my-reviews')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async findAllByUser(@Req() req: Request): Promise<MovieReview[]> {
+  async findAllByUser(
+    @Req() req: Request,
+    @Query() pagination: PaginationDto,
+  ): Promise<PaginatedResponseDto<ReviewResponseDto>> {
     const user = req.user as User;
     const userId = user.id;
-    return this.movieReviewService.findAllByUser(userId);
+    const { page, limit, skip, take } = pagination;
+    const [data, total] = await this.movieReviewService.findAllByUser(
+      userId,
+      skip,
+      take,
+    );
+    const reviews = data.map((review) => new ReviewResponseDto(review));
+
+    return new PaginatedResponseDto(reviews, total, page, limit);
   }
 
   @Get('reviews/:id')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<MovieReview> {
-    return this.movieReviewService.findOne(id);
+  ): Promise<ReviewResponseDto> {
+    const review = await this.movieReviewService.findOne(id);
+    return new ReviewResponseDto(review);
   }
 
   @Patch('reviews/:id')
@@ -81,7 +108,7 @@ export class MovieReviewController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMovieReviewDto: UpdateMovieReviewDto,
     @Req() req: Request,
-  ): Promise<UpdateResult> {
+  ): Promise<UpdateResponseDto> {
     const user = req.user as User;
     const userId = user.id;
     const movieReview = await this.movieReviewService.findOne(id);
@@ -92,7 +119,8 @@ export class MovieReviewController {
       );
     }
 
-    return this.movieReviewService.update(id, updateMovieReviewDto);
+    const result = await this.movieReviewService.update(id, updateMovieReviewDto);
+    return new UpdateResponseDto(result.affected);
   }
 
   @Delete('reviews/:id')
@@ -101,7 +129,7 @@ export class MovieReviewController {
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: Request,
-  ): Promise<DeleteResult> {
+  ): Promise<DeleteResponseDto> {
     const user = req.user as User;
     const userId = user.id;
     const movieReview = await this.movieReviewService.findOne(id);
@@ -111,6 +139,7 @@ export class MovieReviewController {
         'Você não tem permissão para deletar essa crítica.',
       );
     }
-    return this.movieReviewService.remove(id);
+    const result = await this.movieReviewService.remove(id);
+    return new DeleteResponseDto(result.affected);
   }
 }

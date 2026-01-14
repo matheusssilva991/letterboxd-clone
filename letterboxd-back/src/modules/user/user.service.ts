@@ -45,8 +45,12 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(skip?: number, take?: number): Promise<[User[], number]> {
+    return this.userRepository.findAndCount({
+      order: { id: 'ASC' },
+      skip,
+      take,
+    });
   }
 
   async findOne(id: number): Promise<User> {

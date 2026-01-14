@@ -41,45 +41,35 @@ export class MovieService {
    * Busca todos os filmes, com ou sem filtros
    *
    * @param query - Parâmetros opcionais de busca e paginação
-   * @returns Lista de filmes encontrados
+   * @param skip - Número de registros a pular
+   * @param take - Número de registros a retornar
+   * @returns Tupla com lista de filmes e total de registros
    */
-  async findAll(query?: MoviesQueryDto): Promise<Movie[]> {
-    // Se não houver parâmetros de query, retorna todos os filmes
-    if (Object.keys(query).length) {
-      return this.findAllWithFilter(query);
-    } else {
-      return this.movieRepository.find();
-    }
-  }
-
-  /**
-   * Busca filmes aplicando filtros, paginação e ordenação
-   *
-   * @param query - Parâmetros de busca (título, sinopse, paginação, ordenação, etc)
-   * @returns Lista de filmes filtrados
-   * @private
-   */
-  async findAllWithFilter(query: MoviesQueryDto) {
+  async findAll(
+    query?: MoviesQueryDto,
+    skip?: number,
+    take?: number,
+  ): Promise<[Movie[], number]> {
     // Constrói o objeto de filtros dinamicamente
     const filter = {
       // Busca parcial por título (case-insensitive)
-      ...(query.title && { title: ILike(`%${query.title}%`) }),
+      ...(query?.title && { title: ILike(`%${query.title}%`) }),
       // Busca parcial por sinopse (case-insensitive)
-      ...(query.synopsis && {
+      ...(query?.synopsis && {
         synopsis: ILike(`%${query.synopsis}%`),
       }),
     };
 
     // Define quais relações devem ser carregadas (atores, diretores, gêneros, etc)
     // Exemplo: ?include=actors,genres
-    const relations: string[] = query.include ? query.include.split(',') : [];
+    const relations: string[] = query?.include ? query.include.split(',') : [];
 
-    return await this.movieRepository.find({
-      where: filter,                                      // Aplica os filtros
-      order: parseOrder(query.order),                     // Aplica ordenação (ex: createdAt:DESC)
-      take: query.limit || undefined,                     // Limita número de resultados
-      skip: (query.page - 1) * query.limit || 0,         // Calcula offset para paginação
-      relations,                                          // Carrega relações solicitadas
+    return await this.movieRepository.findAndCount({
+      where: Object.keys(filter).length ? filter : {},
+      order: query?.order ? parseOrder(query.order) : { id: 'ASC' },
+      take,
+      skip,
+      relations,
     });
   }
 

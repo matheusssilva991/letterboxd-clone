@@ -33,20 +33,34 @@ export class MovieReviewService {
     });
   }
 
-  async findAll(movieId: number): Promise<MovieReview[]> {
-    return this.movieReviewRepository.find({
+  async findAll(
+    movieId: number,
+    skip?: number,
+    take?: number,
+  ): Promise<[MovieReview[], number]> {
+    return this.movieReviewRepository.findAndCount({
       where: {
         movieId,
       },
+      order: { createdAt: 'DESC' },
+      skip,
+      take,
     });
   }
 
-  async findAllByUser(userId: number): Promise<MovieReview[]> {
-    return await this.movieReviewRepository.find({
+  async findAllByUser(
+    userId: number,
+    skip?: number,
+    take?: number,
+  ): Promise<[MovieReview[], number]> {
+    return await this.movieReviewRepository.findAndCount({
       where: {
         userId,
       },
       relations: ['movie'],
+      order: { createdAt: 'DESC' },
+      skip,
+      take,
     });
   }
 

@@ -20,8 +20,13 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import {
+  DeleteResponseDto,
+  UpdateResponseDto,
+} from '../../common/dto/success-response.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
@@ -71,9 +76,15 @@ export class MovieController {
 
   @Get()
   @ApiOperation({ summary: 'Listar todos os filmes' })
-  @ApiResponse({ status: 200, description: 'Lista de filmes', type: [Movie] })
-  async findAll(@Query() query: MoviesQueryDto): Promise<Movie[]> {
-    return this.movieService.findAll(query);
+  @ApiResponse({ status: 200, description: 'Lista paginada de filmes' })
+  async findAll(
+    @Query() pagination: PaginationDto,
+    @Query() query: MoviesQueryDto,
+  ): Promise<PaginatedResponseDto<Movie>> {
+    const { page, limit, skip, take } = pagination;
+    const [data, total] = await this.movieService.findAll(query, skip, take);
+
+    return new PaginatedResponseDto(data, total, page, limit);
   }
 
   @Get(':id')
@@ -94,17 +105,22 @@ export class MovieController {
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Atualizar filme' })
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 200, description: 'Filme atualizado com sucesso' })
+  @ApiResponse({
+    status: 200,
+    description: 'Filme atualizado com sucesso',
+    type: UpdateResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async update(
     @UploadedFile() image: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateMovieDto: UpdateMovieDto,
-  ): Promise<UpdateResult> {
+  ): Promise<UpdateResponseDto> {
     if (image) {
       updateMovieDto.imagePath = image.path;
     }
-    return this.movieService.update(+id, updateMovieDto);
+    const result = await this.movieService.update(+id, updateMovieDto);
+    return new UpdateResponseDto(result.affected);
   }
 
   @Delete(':id')
@@ -112,9 +128,14 @@ export class MovieController {
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Deletar filme' })
-  @ApiResponse({ status: 200, description: 'Filme deletado com sucesso' })
+  @ApiResponse({
+    status: 200,
+    description: 'Filme deletado com sucesso',
+    type: DeleteResponseDto,
+  })
   @ApiResponse({ status: 404, description: 'Filme não encontrado' })
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
-    return this.movieService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
+    const result = await this.movieService.remove(+id);
+    return new DeleteResponseDto(result.affected);
   }
 }

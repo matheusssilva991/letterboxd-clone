@@ -8,7 +8,7 @@ export class AppService {
   constructor(@Inject(CACHE_MANAGER) private cacheManager: Cache) {}
 
   async getHello(): Promise<string> {
-    return 'Hello World!';
+    return '<h1>Hello World!</h1>';
   }
 
   async getNestJS(): Promise<any> {

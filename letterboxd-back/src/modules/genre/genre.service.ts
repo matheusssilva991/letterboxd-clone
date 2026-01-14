@@ -24,8 +24,12 @@ export class GenreService {
     return this.genreRepository.save(createGenreDto);
   }
 
-  async findAll(): Promise<Genre[]> {
-    return this.genreRepository.find();
+  async findAll(skip?: number, take?: number): Promise<[Genre[], number]> {
+    return this.genreRepository.findAndCount({
+      order: { id: 'ASC' },
+      skip,
+      take,
+    });
   }
 
   async findOne(id: number): Promise<Genre> {

@@ -1,4 +1,0 @@
-1. Adicionar paginação, querry
-2. Autenticação
-3. Autorização
-4. Pegar o ID do usuário autenticado pelo token JWT

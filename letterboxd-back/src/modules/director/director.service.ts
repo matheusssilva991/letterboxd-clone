@@ -21,30 +21,26 @@ export class DirectorService {
     return this.directorRepository.save(createDirectorDto);
   }
 
-  async findAll(query?: DirectorsQueryDto): Promise<Director[]> {
-    if (Object.keys(query).length) {
-      return this.findAllWithFilter(query);
-    } else {
-      return this.directorRepository.find();
-    }
-  }
-
-  async findAllWithFilter(query: DirectorsQueryDto) {
+  async findAll(
+    query?: DirectorsQueryDto,
+    skip?: number,
+    take?: number,
+  ): Promise<[Director[], number]> {
     const filter = {
-      ...(query.name && { name: ILike(`%${query.name}%`) }),
-      ...(query.description && {
+      ...(query?.name && { name: ILike(`%${query.name}%`) }),
+      ...(query?.description && {
         description: ILike(`%${query.description}%`),
       }),
     };
 
     // Trazer dados dos filmes relacionados
-    const relations: string[] = query.include ? query.include.split(',') : [];
+    const relations: string[] = query?.include ? query.include.split(',') : [];
 
-    return await this.directorRepository.find({
-      where: filter,
-      order: parseOrder(query.order),
-      take: query.limit || undefined,
-      skip: (query.page - 1) * query.limit || 0,
+    return await this.directorRepository.findAndCount({
+      where: Object.keys(filter).length ? filter : {},
+      order: query?.order ? parseOrder(query.order) : { id: 'ASC' },
+      take,
+      skip,
       relations,
     });
   }

@@ -20,8 +20,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { DeleteResponseDto } from '../../common/dto/success-response.dto';
+import { UpdateResponseDto } from '../../common/dto/success-response.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
@@ -63,8 +66,14 @@ export class ActorController {
   }
 
   @Get()
-  async findAll(@Query() query: ActorsQueryDto): Promise<Actor[]> {
-    return this.actorService.findAll(query);
+  async findAll(
+    @Query() pagination: PaginationDto,
+    @Query() query: ActorsQueryDto,
+  ): Promise<PaginatedResponseDto<Actor>> {
+    const { page, limit, skip, take } = pagination;
+    const [data, total] = await this.actorService.findAll(query, skip, take);
+
+    return new PaginatedResponseDto(data, total, page, limit);
   }
 
   @Get(':id')
@@ -83,17 +92,19 @@ export class ActorController {
     @UploadedFile() image: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateActorDto: UpdateActorDto,
-  ): Promise<UpdateResult> {
+  ): Promise<UpdateResponseDto> {
     if (image) {
       updateActorDto.imagePath = image.path;
     }
-    return this.actorService.update(+id, updateActorDto);
+    const result = await this.actorService.update(+id, updateActorDto);
+    return new UpdateResponseDto(result.affected);
   }
 
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
-    return this.actorService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
+    const result = await this.actorService.remove(+id);
+    return new DeleteResponseDto(result.affected);
   }
 }

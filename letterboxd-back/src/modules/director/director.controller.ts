@@ -20,8 +20,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { DeleteResult, UpdateResult } from 'typeorm';
 import { multerConfig } from '../../../config/multer.config';
+import { DeleteResponseDto } from '../../common/dto/success-response.dto';
+import { UpdateResponseDto } from '../../common/dto/success-response.dto';
+import { PaginationDto } from '../../common/dto/pagination.dto';
+import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
 import { JwtAuthGuard } from '../../common/guards/auth.guard';
@@ -63,8 +66,14 @@ export class DirectorController {
   }
 
   @Get()
-  async findAll(@Query() query: DirectorsQueryDto): Promise<Director[]> {
-    return this.directorService.findAll(query);
+  async findAll(
+    @Query() pagination: PaginationDto,
+    @Query() query: DirectorsQueryDto,
+  ): Promise<PaginatedResponseDto<Director>> {
+    const { page, limit, skip, take } = pagination;
+    const [data, total] = await this.directorService.findAll(query, skip, take);
+
+    return new PaginatedResponseDto(data, total, page, limit);
   }
 
   @Get(':id')
@@ -83,18 +92,20 @@ export class DirectorController {
     @UploadedFile() image: Express.Multer.File,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateDirectorDto: UpdateDirectorDto,
-  ): Promise<UpdateResult> {
+  ): Promise<UpdateResponseDto> {
     if (image) {
       updateDirectorDto.imagePath = image.path;
     }
 
-    return this.directorService.update(+id, updateDirectorDto);
+    const result = await this.directorService.update(+id, updateDirectorDto);
+    return new UpdateResponseDto(result.affected);
   }
 
   @Delete(':id')
   @Roles(RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
-    return this.directorService.remove(+id);
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResponseDto> {
+    const result = await this.directorService.remove(+id);
+    return new DeleteResponseDto(result.affected);
   }
 }
