@@ -178,6 +178,49 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "auth / password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{admin_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "password",
+									"value": "123456Mc@",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "NovaSenh@123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/auth/password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"password"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -750,7 +793,7 @@
 				{
 					"name": "movies / :movieId / genres / :genreId",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
 						"url": {
 							"raw": "{{url}}/movies/1/genres/1",
@@ -762,35 +805,6 @@
 								"1",
 								"genres",
 								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "movies / :movieId / genres",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "genreId",
-									"value": "1",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{url}}/movies/2/genres",
-							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"movies",
-								"2",
-								"genres"
 							]
 						}
 					},
@@ -810,6 +824,211 @@
 								"movies",
 								"1",
 								"genres",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movie Review",
+			"item": [
+				{
+					"name": "movies / :movieId / reviews",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/movies/1/reviews?page=1&limit=10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"reviews"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reviews / my-reviews",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/reviews/my-reviews?page=1&limit=10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reviews",
+								"my-reviews"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reviews / :id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/reviews/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reviews",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "movies / :movieId / reviews",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stars",
+									"value": "5",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "Excelente filme! Recomendo muito.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/movies/1/reviews",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"movies",
+								"1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reviews / :id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "stars",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "comment",
+									"value": "Bom filme, mas poderia ser melhor.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/reviews/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reviews",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reviews / :id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{user_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/reviews/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"reviews",
 								"1"
 							]
 						}
