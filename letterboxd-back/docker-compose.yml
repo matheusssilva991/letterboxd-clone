@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.dev
     environment:
       NODE_ENV: ${NODE_ENV:-development}
-      PORT: ${PORT:-3000}
+      PORT: ${PORT:-3001}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       MYSQL_HOST: mysql
@@ -20,8 +20,9 @@ services:
       THROTTLER_LIMIT: ${THROTTLER_LIMIT:-50}
       SECRET_KEY: ${SECRET_KEY:-letterboxd}
       EXPIRES_IN: ${EXPIRES_IN:-1 day}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
     ports:
-      - "3000:3000"
+      - "3001:3001"
     volumes:
       - ./src:/usr/app/src
       - /usr/app/node_modules  # Evita sobrescrever node_modules no container

@@ -16,7 +16,7 @@ export class CreateUserDto {
     example: 'João Silva',
   })
   @IsString({ message: 'Informe um nome válido.' })
-  @IsNotEmpty({ message: 'Informe um nome.' })
+  @IsOptional({ message: 'Informe um nome.' })
   name: string;
 
   @ApiProperty({

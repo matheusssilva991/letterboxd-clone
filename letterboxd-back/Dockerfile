@@ -34,7 +34,7 @@ COPY --from=builder /usr/app/tsconfig.json ./
 COPY --from=builder /usr/app/nest-cli.json ./
 
 # Expor a porta
-EXPOSE 3000
+EXPOSE 3001
 
 # Comando para iniciar (produção)
 CMD ["npm", "run", "start:prod"]

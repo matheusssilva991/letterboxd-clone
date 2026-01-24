@@ -27,6 +27,12 @@ async function bootstrap() {
   // Cria a instância da aplicação NestJS a partir do módulo raiz
   const app = await NestFactory.create(AppModule);
 
+  // Habilita CORS para o front-end, usando variável de ambiente
+  app.enableCors({
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    credentials: true,
+  });
+
   // Configura o filtro de exceções global para padronizar respostas de erro
   app.useGlobalFilters(new GlobalExceptionFilter());
 
