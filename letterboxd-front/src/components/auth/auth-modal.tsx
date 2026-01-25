@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, ReactNode } from "react";
 import { Controller } from "react-hook-form";
-import { useLoginForm, useRegisterForm } from "@/hooks/auth-hook";
+import { useLoginForm, useRegisterForm, useAuth } from "@/hooks/auth-hook";
 import { loginService, registerService } from "@/services/auth/auth-service";
 import { LoginPayload, RegisterPayload } from "@/types/auth-type";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger, D
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { ShieldCheck, X, AlertTriangle } from "lucide-react";
+import axios from "axios";
 
 interface AuthModalProps {
   children: ReactNode;
@@ -21,6 +22,7 @@ interface AuthModalProps {
 export function AuthModal({ children }: AuthModalProps) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth();
 
   // --- React Hook Form para login ---
   const {
@@ -58,21 +60,35 @@ export function AuthModal({ children }: AuthModalProps) {
   // Evita warning do React Compiler com o watch do React Hook Form
   const passwordValue = watchRegister("password");
 
+  // Helper para extrair mensagem de erro de chamadas HTTP (Axios) de forma type-safe
+  const getApiErrorMessage = (error: unknown, fallback: string) => {
+    if (axios.isAxiosError(error)) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const data = error.response?.data as any;
+      return data?.message || error.message || fallback;
+    }
+    if (error instanceof Error) return error.message;
+    return fallback;
+  };
+
 
   // Função para login real
   async function onLoginSubmit(data: LoginPayload) {
     setIsLoading(true);
     try {
       const result = await loginService({ email: data.email, password: data.password });
+
+      // Atualiza o contexto de autenticação
+      login(result.access_token, result.user);
+
+      // Salva refresh_token separadamente
+      localStorage.setItem("letterboxd-refresh-token", result.refresh_token);
+
       toast.success("Login realizado com sucesso!");
-      // Salva o token no localStorage (ajuste conforme o backend)
-      if (result && result.token) {
-        localStorage.setItem("token", result.token);
-      }
       // Fecha o modal após login bem-sucedido
       setOpen(false);
     } catch (err: unknown) {
-      toast.error(err?.response?.data?.message || "Erro ao fazer login");
+      toast.error(getApiErrorMessage(err, "Erro ao fazer login"));
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +103,7 @@ export function AuthModal({ children }: AuthModalProps) {
       // Troca para a aba de login após cadastro
       setActiveTab("login");
     } catch (err: unknown) {
-      toast.error(err?.response?.data?.message || "Erro ao registrar");
+      toast.error(getApiErrorMessage(err, "Erro ao registrar"));
     } finally {
       setIsLoading(false);
     }

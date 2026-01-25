@@ -26,7 +26,9 @@ export interface LoginPayload {
 
 export interface LoginResponse {
   access_token: string;
-  user: AuthUser; // Supondo que sua API retorne o usuário junto
+  refresh_token: string;
+  expiresIn: string;
+  user: AuthUser;
 }
 
 export interface RegisterPayload {
