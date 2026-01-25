@@ -9,29 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@/components/ui/dialog";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { ShieldCheck, X, AlertTriangle } from "lucide-react";
 
-export function AuthModal() {
-  const [isLoading, setIsLoading] = useState(false);
+interface AuthModalProps {
+  children: ReactNode;
+}
 
-  // Estados para simulação
-  const [usernameError, setUsernameError] = useState(false);
-  const [username, setUsername] = useState("");
+export function AuthModal({ children }: AuthModalProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [isLoading, setIsLoading] = useState(false);
 
   // --- React Hook Form para login ---
   const {
@@ -82,7 +71,7 @@ export function AuthModal() {
       }
       // Fecha o modal após login bem-sucedido
       setOpen(false);
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(err?.response?.data?.message || "Erro ao fazer login");
     } finally {
       setIsLoading(false);
@@ -97,7 +86,7 @@ export function AuthModal() {
       toast.success("Registro realizado com sucesso!");
       // Troca para a aba de login após cadastro
       setActiveTab("login");
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast.error(err?.response?.data?.message || "Erro ao registrar");
     } finally {
       setIsLoading(false);
@@ -107,9 +96,7 @@ export function AuthModal() {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button className="bg-[#00B84C] hover:bg-[#009C3A] text-white font-bold uppercase tracking-widest transition-colors">
-          Get started — it&apos;s free!
-        </Button>
+        {children}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[440px] bg-letterboxd-modal border-none text-white p-8 shadow-2xl [&>button.absolute]:hidden">

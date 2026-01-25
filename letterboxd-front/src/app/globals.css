@@ -6,7 +6,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
   /* --- ADICIONADO: Mapeamento das Cores Letterboxd --- */
@@ -16,6 +16,12 @@
   --color-letterboxd-orange: var(--letterboxd-orange);
   --color-letterboxd-input: var(--letterboxd-input);
   --color-letterboxd-label: var(--letterboxd-label);
+  --color-letterboxd-background: var(--letterboxd-background);
+  --color-letterboxd-blue: var(--letterboxd-blue);
+  --color-letterboxd-header-bg: var(--letterboxd-header-bg);
+  --color-letterboxd-header-border: var(--letterboxd-header-border);
+  --color-letterboxd-header-btn: var(--letterboxd-header-btn);
+  --color-letterboxd-header-btn-hover: var(--letterboxd-header-btn-hover);
   /* ----------------------------------------------- */
 
   --color-sidebar-ring: var(--sidebar-ring);
@@ -62,13 +68,21 @@
   --letterboxd-green: #00E054;       /* Verde Neon */
   --letterboxd-green-hover: #00C045; /* Verde Hover */
   --letterboxd-orange: #FF8000;      /* Laranja Erro */
-  --letterboxd-input: #CCDDEE;       /* Azul Claro (Inputs) */
+  --letterboxd-blue: #40BCF4;        /* Azul Letterboxd */
+  --letterboxd-input: #d3e2ef;       /* Azul Claro (Inputs) */
+  --letterboxd-input-text: #6c7a89;  /* Texto cinza escuro do input */
+  --letterboxd-input-placeholder: #A0B2C2; /* Placeholder do input */
   --letterboxd-label: #99AABB;       /* Texto Label */
+  --letterboxd-background: #1d242b;  /* Fundo Claro */
+  --letterboxd-header-bg: #14181c;   /* Fundo barra de busca */
+  --letterboxd-header-border: #899AA9; /* Borda/ícone barra de busca */
+  --letterboxd-header-btn: #00B84C;  /* Botão principal */
+  --letterboxd-header-btn-hover: #009C3A; /* Botão principal hover */
   /* ------------------------ */
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(1 0 0); /* Mesma cor do background */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -102,7 +116,7 @@
 
 .dark {
   --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
+  --foreground: oklch(0.145 0 0); /* Mesma cor do background no dark */
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);

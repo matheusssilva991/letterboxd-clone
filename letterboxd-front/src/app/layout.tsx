@@ -1,24 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google"; // 1. Importando a Inter
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/components/theme-provider"; // Crie esse arquivo
-import { cn } from "@/lib/utils"; // Utilitário padrão do Shadcn
+import { ThemeProvider } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
+import { Header } from "@/components/header/header";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// 2. Configurando a fonte
+const inter = Inter({
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: "--font-inter", // Nome da variável que o Tailwind vai ler
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Letterboxd Clone', // O %s é substituído pelo título das outras páginas
-    default: 'Letterboxd Clone', // Título da Home
+    template: '%s | Letterboxd Clone',
+    default: 'Letterboxd Clone',
   },
   description: "A social network for film lovers.",
 };
@@ -33,21 +31,18 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          geistSans.variable,
-          geistMono.variable
+          inter.variable
         )}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark" // Letterboxd é nativamente dark
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
-          {/* DICA: Aqui é o lugar ideal para colocar sua <Navbar />
-            assim ela aparece em todas as páginas.
-          */}
+          <Header />
 
-          <main className="flex flex-col min-h-screen">
+          <main className="flex flex-col min-h-screen bg-letterboxd-background pt-6">
              {children}
           </main>
 
