@@ -16,8 +16,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Letterboxd Clone',
-    default: 'Letterboxd Clone',
+    template: '%s | Letterboxd',
+    default: 'Letterboxd - Social film discovery',
   },
   description: "A social network for film lovers.",
 };

@@ -115,11 +115,11 @@ export function AuthModal({ children }: AuthModalProps) {
         {children}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-[440px] bg-letterboxd-modal border-none text-white p-8 shadow-2xl [&>button.absolute]:hidden">
+      <DialogContent className="max-w-[95vw] sm:max-w-[440px] bg-letterboxd-modal border-none text-white p-5 sm:p-6 md:p-8 shadow-2xl [&>button.absolute]:hidden">
 
         {/* Cabeçalho Customizado (Alinhado) */}
         <div className="flex items-center justify-between w-full mb-0">
-          <DialogTitle className="text-lg font-normal uppercase tracking-widest text-white leading-none">
+          <DialogTitle className="text-sm sm:text-base md:text-lg font-normal uppercase tracking-wide sm:tracking-widest text-white leading-none">
             Join Letterboxd
           </DialogTitle>
 
@@ -129,7 +129,7 @@ export function AuthModal({ children }: AuthModalProps) {
               aria-label="Close"
               className="text-[#99AABB] hover:text-white transition-colors p-0 m-0 leading-none flex items-center justify-center rounded-sm focus-visible:ring-2 focus-visible:ring-white/50 outline-none"
             >
-              <X className="w-6 h-6" />
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           </DialogClose>
         </div>
@@ -159,7 +159,7 @@ export function AuthModal({ children }: AuthModalProps) {
 
           {/* --- LOGIN TAB --- */}
           <TabsContent value="login">
-            <form onSubmit={handleLoginSubmit(onLoginSubmit)} className="space-y-4 mt-4">
+            <form onSubmit={handleLoginSubmit(onLoginSubmit)} className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
               <div className="flex flex-col gap-2">
                 <Label htmlFor="login-email" className="text-[#E5EAF0] font-normal">Email</Label>
                 <Input id="login-email" type="email" placeholder="name@example.com" {...loginField("email")}/>
@@ -209,7 +209,7 @@ export function AuthModal({ children }: AuthModalProps) {
 
           {/* --- REGISTER TAB --- */}
           <TabsContent value="register">
-            <form className="space-y-4 mt-4" onSubmit={handleRegisterSubmit(onRegisterSubmit)}>
+            <form className="space-y-3 sm:space-y-4 mt-3 sm:mt-4" onSubmit={handleRegisterSubmit(onRegisterSubmit)}>
               <div className="flex flex-col gap-2">
                 <Label htmlFor="new-email" className="text-[#E5EAF0] font-normal">Email</Label>
                 <Input id="new-email" type="email" {...registerField("email")} />
