@@ -23,7 +23,6 @@ import {
 import { multerConfig } from '../../../config/multer.config';
 import { DeleteResponseDto } from '../../common/dto/success-response.dto';
 import { UpdateResponseDto } from '../../common/dto/success-response.dto';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
@@ -76,10 +75,9 @@ export class ActorController {
   @ApiOperation({ summary: 'Buscar todos os atores com paginação' })
   @ApiResponse({ status: 200, description: 'Lista de atores recuperada com sucesso', type: PaginatedResponseDto<Actor> })
   async findAll(
-    @Query() pagination: PaginationDto,
     @Query() query: ActorsQueryDto,
   ): Promise<PaginatedResponseDto<Actor>> {
-    const { page, limit, skip, take } = pagination;
+    const { page, limit, skip, take } = query;
     const [data, total] = await this.actorService.findAll(query, skip, take);
 
     return new PaginatedResponseDto(data, total, page, limit);

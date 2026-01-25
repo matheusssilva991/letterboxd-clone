@@ -25,7 +25,6 @@ import {
   DeleteResponseDto,
   UpdateResponseDto,
 } from '../../common/dto/success-response.dto';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
@@ -78,10 +77,9 @@ export class MovieController {
   @ApiOperation({ summary: 'Listar todos os filmes' })
   @ApiResponse({ status: 200, description: 'Lista paginada de filmes' })
   async findAll(
-    @Query() pagination: PaginationDto,
     @Query() query: MoviesQueryDto,
   ): Promise<PaginatedResponseDto<Movie>> {
-    const { page, limit, skip, take } = pagination;
+    const { page, limit, skip, take } = query;
     const [data, total] = await this.movieService.findAll(query, skip, take);
 
     return new PaginatedResponseDto(data, total, page, limit);

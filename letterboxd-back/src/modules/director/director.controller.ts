@@ -23,7 +23,6 @@ import {
 import { multerConfig } from '../../../config/multer.config';
 import { DeleteResponseDto } from '../../common/dto/success-response.dto';
 import { UpdateResponseDto } from '../../common/dto/success-response.dto';
-import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PaginatedResponseDto } from '../../common/dto/paginated-response.dto';
 import { Roles } from '../../common/decorators/role.decorator';
 import { RoleEnum } from '../../common/enums/role.enum';
@@ -76,10 +75,9 @@ export class DirectorController {
   @ApiOperation({ summary: 'Buscar todos os diretores com paginação' })
   @ApiResponse({ status: 200, description: 'Lista de diretores recuperada com sucesso', type: PaginatedResponseDto<Director> })
   async findAll(
-    @Query() pagination: PaginationDto,
     @Query() query: DirectorsQueryDto,
   ): Promise<PaginatedResponseDto<Director>> {
-    const { page, limit, skip, take } = pagination;
+    const { page, limit, skip, take } = query;
     const [data, total] = await this.directorService.findAll(query, skip, take);
 
     return new PaginatedResponseDto(data, total, page, limit);

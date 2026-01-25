@@ -34,7 +34,16 @@ export class AuthService {
     const user = await this.userService.validateLogin(loginUserDto);
 
     // Gera e retorna o token JWT
-    return this._createToken(user);
+    const tokenData = this._createToken(user);
+    return {
+      access_token: tokenData.access_token,
+      refresh_token: tokenData.refresh_token,
+      expiresIn: tokenData.expiresIn,
+      user: {
+        username: user.username,
+        email: user.email,
+      },
+    };
   }
 
   /**
@@ -57,11 +66,20 @@ export class AuthService {
     };
 
     // Assina o payload e gera o token JWT
-    const Authorization = this.jwtService.sign(payload);
+    const access_token = this.jwtService.sign(payload);
+
+    const refresh_token = this.jwtService.sign(
+      { sub: user.id, username: user.username, type: 'refresh' },
+      {
+        expiresIn: (this.configService.get<string>('REFRESH_EXPIRES_IN') || '7d') as any,
+        secret: this.configService.get<string>('REFRESH_SECRET') || this.configService.get<string>('JWT_SECRET'),
+      },
+    );
 
     return {
-      expiresIn: this.configService.get<string>('EXPIRES_IN'), // Tempo de expiração configurado
-      Authorization, // Token JWT
+      expiresIn: this.configService.get<string>('EXPIRES_IN'),
+      access_token,
+      refresh_token,
     };
   }
 

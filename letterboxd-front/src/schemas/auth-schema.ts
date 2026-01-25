@@ -24,8 +24,14 @@ export type RegisterFormData = z.infer<typeof registerSchema>;
 
 // --- REGISTER SCHEMA COM CHECKBOXES ---
 export const registerSchemaWithChecks = registerSchema.extend({
-  ageTerms: z.literal(true, { message: "Aceite os termos de uso" }),
-  privacy: z.literal(true, { message: "Aceite a política de privacidade" }),
-  captcha: z.literal(true, { message: "Confirme que você é humano" }),
+  ageTerms: z.boolean().refine((val) => val === true, {
+    message: "Aceite os termos de uso",
+  }),
+  privacy: z.boolean().refine((val) => val === true, {
+    message: "Aceite a política de privacidade",
+  }),
+  captcha: z.boolean().refine((val) => val === true, {
+    message: "Confirme que você é humano",
+  }),
 });
 export type RegisterFormDataWithChecks = z.infer<typeof registerSchemaWithChecks>;

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google"; // 1. Importando a Inter
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/hooks/auth-hook";
 import { cn } from "@/lib/utils";
 import { Header } from "@/components/header/header";
 
@@ -40,13 +41,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
+          <AuthProvider>
+            <Header />
 
-          <main className="flex flex-col min-h-screen bg-letterboxd-background pt-6">
-             {children}
-          </main>
+            <main className="flex flex-col min-h-screen bg-letterboxd-background pt-6">
+              {children}
+            </main>
 
-          <Toaster richColors position="top-center" />
+            <Toaster richColors position="top-center" />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

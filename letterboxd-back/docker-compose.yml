@@ -19,7 +19,9 @@ services:
       THROTTLER_TTL: ${THROTTLER_TTL:-60}
       THROTTLER_LIMIT: ${THROTTLER_LIMIT:-50}
       SECRET_KEY: ${SECRET_KEY:-letterboxd}
-      EXPIRES_IN: ${EXPIRES_IN:-1 day}
+      EXPIRES_IN: ${EXPIRES_IN:-1h}
+      REFRESH_SECRET: ${REFRESH_SECRET:-refresh_secret_example}
+      REFRESH_EXPIRES_IN: ${REFRESH_EXPIRES_IN:-7d}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
     ports:
       - "3001:3001"

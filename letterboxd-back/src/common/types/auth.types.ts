@@ -11,5 +11,6 @@ export interface JwtPayload {
 
 export interface GeneratedToken {
   expiresIn: string;
-  Authorization: string;
+  access_token: string;
+  refresh_token: string;
 }
