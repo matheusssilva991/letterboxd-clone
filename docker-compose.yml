@@ -1,0 +1,89 @@
+services:
+  front:
+    container_name: letterboxd-frontend
+    build:
+      context: ./letterboxd-front
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./letterboxd-front:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - back
+    networks:
+      - letterboxd
+    restart: unless-stopped
+
+  back:
+    container_name: letterboxd-backend
+    build:
+      context: ./letterboxd-back
+      dockerfile: Dockerfile.dev
+    env_file:
+      - ./.env
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./letterboxd-back:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - letterboxd
+    restart: unless-stopped
+
+  mysql:
+    container_name: letterboxd-db
+    image: mysql:8.0
+    env_file:
+      - ./.env
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - letterboxd
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  redis:
+    container_name: letterboxd-redis
+    image: redis:alpine
+    command: redis-server --save 60 1 --loglevel warning
+    env_file:
+      - ./.env
+    sysctls:
+      - net.core.somaxconn=511
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - letterboxd
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+networks:
+  letterboxd:
+    name: letterboxd_net
+    driver: bridge
+
+volumes:
+  mysql_data:
+    name: letterboxd_my_data
+  redis_data:
+    name: letterboxd_redis
