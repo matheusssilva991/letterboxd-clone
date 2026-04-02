@@ -5,7 +5,13 @@ import Link from "next/link";
 import { SearchBar } from "@/components/search-bar/search-bar";
 import { NavLink } from "../navlink/navlink";
 import { useAuth } from "@/hooks/auth-hook";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { User, ChevronDown, Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -38,7 +44,11 @@ export function Header() {
             className="md:hidden text-letterboxd-label hover:text-white transition-colors p-2"
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
 
           {/* Links de Navegação (Desktop) */}
@@ -56,9 +66,13 @@ export function Header() {
             ) : (
               <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
-                  <button className={`outline-none flex items-center gap-2 px-2 py-1 rounded transition-all group ${
-                    dropdownOpen ? 'text-white' : 'text-[#99AABB] hover:text-white'
-                  }`}>
+                  <button
+                    className={`outline-none flex items-center gap-2 px-2 py-1 rounded transition-all group ${
+                      dropdownOpen
+                        ? "text-white"
+                        : "text-[#99AABB] hover:text-white"
+                    }`}
+                  >
                     <Avatar className="w-6 h-6">
                       <AvatarFallback className="bg-transparent text-current">
                         <User className="w-4 h-4" />
@@ -70,30 +84,66 @@ export function Header() {
                     <ChevronDown className="w-3 h-3 opacity-50 group-hover:opacity-100" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" sideOffset={0} className="w-48 border-none p-0">
+                <DropdownMenuContent
+                  align="end"
+                  sideOffset={0}
+                  className="w-48 border-none p-0"
+                >
                   <div className="py-1">
-                    <DropdownMenuItem asChild><Link href="/">Home</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/profile">Profile</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/films">Films</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/diary">Diary</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/reviews">Reviews</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/watchlist">Watchlist</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/lists">Lists</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/likes">Likes</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/tags">Tags</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/network">Network</Link></DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/">Home</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/films">Films</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/diary">Diary</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/reviews">Reviews</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/watchlist">Watchlist</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/lists">Lists</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/likes">Likes</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/tags">Tags</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/network">Network</Link>
+                    </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild><Link href="/settings">Settings</Link></DropdownMenuItem>
-                    <DropdownMenuItem asChild><Link href="/subscriptions">Subscriptions</Link></DropdownMenuItem>
-                    <DropdownMenuItem onClick={logout}>Sign Out</DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/settings">Settings</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/subscriptions">Subscriptions</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={logout}>
+                      Sign Out
+                    </DropdownMenuItem>
                   </div>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
             <NavLink href="/films">Films</NavLink>
-            <NavLink href="/lists" className="hidden sm:inline-block">Lists</NavLink>
-            <NavLink href="/members" className="hidden md:inline-block">Members</NavLink>
-            <NavLink href="/journal" className="hidden md:inline-block">Journal</NavLink>
+            <NavLink href="/lists" className="hidden sm:inline-block">
+              Lists
+            </NavLink>
+            <NavLink href="/members" className="hidden md:inline-block">
+              Members
+            </NavLink>
+            <NavLink href="/journal" className="hidden md:inline-block">
+              Journal
+            </NavLink>
           </nav>
           {/* --- BARRA DE BUSCA --- */}
           <SearchBar placeholder="Search..." />
@@ -116,42 +166,78 @@ export function Header() {
               </AuthModal>
             ) : (
               <>
-                <Link href="/profile" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/profile"
+                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   {user?.username ?? "Profile"}
                 </Link>
                 <div className="border-t border-white/10 my-1"></div>
               </>
             )}
-            <Link href="/films" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+            <Link
+              href="/films"
+              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Films
             </Link>
-            <Link href="/lists" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+            <Link
+              href="/lists"
+              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Lists
             </Link>
-            <Link href="/members" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+            <Link
+              href="/members"
+              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Members
             </Link>
-            <Link href="/journal" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+            <Link
+              href="/journal"
+              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Journal
             </Link>
             {isAuthenticated && (
               <>
                 <div className="border-t border-white/10 my-1"></div>
-                <Link href="/diary" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/diary"
+                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Diary
                 </Link>
-                <Link href="/reviews" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/reviews"
+                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Reviews
                 </Link>
-                <Link href="/watchlist" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/watchlist"
+                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Watchlist
                 </Link>
-                <Link href="/settings" className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/settings"
+                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Settings
                 </Link>
                 <button
                   onClick={() => {
-                    logout();
+                    void logout();
                     setMobileMenuOpen(false);
                   }}
                   className="text-left px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"

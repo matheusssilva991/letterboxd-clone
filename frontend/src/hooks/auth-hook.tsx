@@ -11,6 +11,10 @@ import {
   RegisterFormDataWithChecks,
 } from "@/schemas/auth-schema";
 import type { AuthUser, AuthContextType } from "@/types/auth-type";
+import {
+  logoutService,
+  refreshAccessTokenService,
+} from "@/services/auth/auth-service";
 
 // --- FORM HOOKS (Utilitários) ---
 export function useLoginForm() {
@@ -27,13 +31,13 @@ export function useRegisterForm() {
     defaultValues: {
       ageTerms: false,
       privacy: false,
-      captcha: false
-    }
+      captcha: false,
+    },
   });
 }
 
 // --- AUTH CONTEXT ---
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -41,33 +45,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Carrega do localStorage apenas no lado do cliente
-    const token = localStorage.getItem("letterboxd-token");
+    const token = sessionStorage.getItem("letterboxd-token");
+    const refreshToken = localStorage.getItem("letterboxd-refresh-token");
     const storedUser = localStorage.getItem("letterboxd-user");
 
-    if (token && storedUser) {
-      try {
-        // Evita renderização em cascata usando microtask
-        Promise.resolve().then(() => setUser(JSON.parse(storedUser)));
-      } catch (error) {
-        console.error("Erro ao ler usuário do storage", error);
-        // Se o JSON estiver corrompido, é bom limpar
-        localStorage.removeItem("letterboxd-token");
-        localStorage.removeItem("letterboxd-user");
+    const loadSession = async () => {
+      if (!storedUser) {
+        setIsLoading(false);
+        return;
       }
-    }
-    Promise.resolve().then(() => setIsLoading(false));
+
+      try {
+        const parsedUser = JSON.parse(storedUser) as AuthUser;
+
+        // Sem access token, tenta renovar com refresh token para restaurar sessão
+        if (!token && refreshToken) {
+          const refreshed = await refreshAccessTokenService(refreshToken);
+          sessionStorage.setItem("letterboxd-token", refreshed.access_token);
+        }
+
+        setUser(parsedUser);
+      } catch {
+        sessionStorage.removeItem("letterboxd-token");
+        localStorage.removeItem("letterboxd-refresh-token");
+        localStorage.removeItem("letterboxd-user");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void loadSession();
   }, []);
 
-  const login = (token: string, userData: AuthUser) => {
-    localStorage.setItem("letterboxd-token", token);
+  const login = (
+    accessToken: string,
+    refreshToken: string,
+    userData: AuthUser,
+  ) => {
+    sessionStorage.setItem("letterboxd-token", accessToken);
+    localStorage.setItem("letterboxd-refresh-token", refreshToken);
     localStorage.setItem("letterboxd-user", JSON.stringify(userData));
     setUser(userData);
-    router.refresh(); // Atualiza componentes do servidor (Server Components)
+    router.refresh();
   };
 
-  const logout = () => {
-    localStorage.removeItem("letterboxd-token");
+  const logout = async () => {
+    try {
+      await logoutService();
+    } catch {
+      // Mesmo com falha de rede, sessão local deve ser encerrada
+    }
+
+    sessionStorage.removeItem("letterboxd-token");
+    localStorage.removeItem("letterboxd-refresh-token");
     localStorage.removeItem("letterboxd-user");
     setUser(null);
     router.push("/");
@@ -75,12 +105,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: !!user, login, logout, isLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth deve ser usado dentro de <AuthProvider>");
+  }
+
+  return context;
 }

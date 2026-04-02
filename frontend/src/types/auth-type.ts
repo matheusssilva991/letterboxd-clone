@@ -5,16 +5,16 @@ export interface RegisterResponse {
 }
 
 export interface AuthUser {
+  id?: number;
   username: string;
   email: string;
-  // token?: string; // Se quiser salvar o token no objeto de usuário também
 }
 
 export interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
-  login: (token: string, userData: AuthUser) => void;
-  logout: () => void;
+  login: (accessToken: string, refreshToken: string, userData: AuthUser) => void;
+  logout: () => Promise<void>;
   isLoading: boolean;
 }
 

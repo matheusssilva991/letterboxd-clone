@@ -15,26 +15,19 @@ export interface SearchBarProps extends React.InputHTMLAttributes<HTMLInputEleme
 export const SearchBar = React.forwardRef<HTMLInputElement, SearchBarProps>(
   (
     {
-      wrapperClassName = "relative hidden sm:block group",
+      wrapperClassName = "relative group",
       inputClassName = "bg-letterboxd-input text-letterboxd-input-text rounded-full py-1.5 pl-3 pr-8 text-xs font-bold w-[140px] sm:w-[160px] md:w-[180px] lg:w-[200px] focus:outline-none focus:bg-white hover:bg-white focus:placeholder:text-gray-500 focus-visible:ring-0 transition-all duration-300 placeholder:text-transparent",
       iconClassName = "absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-letterboxd-header-border group-focus-within:text-black pointer-events-none transition-colors",
       showIcon = true,
       ...props
     },
-    ref
+    ref,
   ) => (
     <div className={wrapperClassName}>
-      <input
-        ref={ref}
-        type="text"
-        className={inputClassName}
-        {...props}
-      />
-      {showIcon && (
-        <Search className={iconClassName} />
-      )}
+      <input ref={ref} type="text" className={inputClassName} {...props} />
+      {showIcon && <Search className={iconClassName} />}
     </div>
-  )
+  ),
 );
 
 SearchBar.displayName = "SearchBar";
