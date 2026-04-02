@@ -19,7 +19,7 @@ export const cacheConfig: CacheModuleAsyncOptions = {
   inject: [ConfigService],  // Injeta ConfigService na factory
   useFactory: (configService: ConfigService) => ({
     store: redisStore,                                      // Usa Redis como store de cache
-    host: configService.get('REDIS_HOST', 'localhost'),    // Host do Redis
+    host: configService.get('REDIS_HOST', 'redis'),        // Host do Redis
     port: configService.get('REDIS_PORT', 6379),           // Porta do Redis (padrão: 6379)
     ttl: configService.get('CACHE_TTL', 10),               // Time To Live - tempo de expiração do cache em segundos
     max: configService.get('CACHE_MAX', 100),              // Número máximo de itens no cache

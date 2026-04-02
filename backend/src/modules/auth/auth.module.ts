@@ -7,10 +7,21 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import type { StringValue } from 'ms';
+import { RedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
   imports: [
     UserModule,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'single',
+        url:
+          configService.get<string>('REDIS_URL') ||
+          `redis://${configService.get<string>('REDIS_HOST', 'redis')}:${configService.get<number>('REDIS_PORT', 6379)}`,
+      }),
+    }),
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',

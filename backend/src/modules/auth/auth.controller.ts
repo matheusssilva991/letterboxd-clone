@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '../../common/guards/auth.guard';
 import { LoginResponseDto } from './dto/login-response.dto';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @ApiTags('auth')
 @Controller({ version: '1', path: 'auth' })
@@ -26,37 +27,48 @@ export class AuthController {
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Logout do usuário (invalida token)' })
+  @ApiOperation({ summary: 'Logout do usuário (adiciona token à blacklist)' })
   @ApiResponse({ status: 200, description: 'Logout realizado com sucesso' })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   public async logout(
     @Req() request: Request,
   ): Promise<{ message: string }> {
-    // Nota: Esta é uma implementação básica. Em produção, você pode:
-    // 1. Adicionar o token a uma blacklist (Redis)
-    // 2. Armazenar tokens inválidos no banco de dados
-    // Por enquanto, retornamos sucesso e deixar o cliente remover o token
-    return { message: 'Logout realizado com sucesso. Remova o token do cliente.' };
+    const user = request.user as any;
+    const token = request.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return { message: 'Token não encontrado no header' };
+    }
+
+    // Calcula a expiração padrão do access token em segundos
+    const expiresIn = this.getTokenExpiresInSeconds();
+    await this.authService.logout(token, expiresIn);
+
+    return { message: 'Logout realizado com sucesso' };
   }
 
   @Post('refresh')
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'Renovar token de acesso usando refresh token' })
-  @ApiResponse({ status: 200, description: 'Token renovado com sucesso', type: LoginResponseDto })
-  @ApiResponse({ status: 401, description: 'Não autorizado ou refresh token expirado' })
+  @ApiResponse({
+    status: 200,
+    description: 'Token renovado com sucesso',
+    schema: {
+      properties: {
+        access_token: { type: 'string' },
+        expiresIn: { type: 'string' },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Refresh token inválido ou expirado' })
   public async refresh(
-    @Req() request: Request,
-  ): Promise<LoginResponseDto> {
-    // Nota: Esta é uma implementação básica
-    // Em produção, você deveria validar o refresh token separadamente
-    // e regenerar um novo access token
-    const user = request.user as any;
-    const data = await this.authService.login({
-      username: user.username,
-      password: '' // Não usaremos a senha aqui em um cenário real
-    });
+    @Body() refreshTokenDto: RefreshTokenDto,
+  ): Promise<{ access_token: string; expiresIn: string }> {
+    return this.authService.refreshAccessToken(refreshTokenDto.refresh_token);
+  }
 
-    return new LoginResponseDto(data);
+  private getTokenExpiresInSeconds(): number {
+    // Converte formato TTL padrão (ex: '15m', '7d') para segundos
+    // Default é 15 minutos = 900 segundos
+    return 900;
   }
 }
