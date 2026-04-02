@@ -381,8 +381,8 @@ A API segue o padrão REST e está versionada em **v1**. Todos os endpoints come
 | GET | `/api/v1/users/:id` | Obter detalhes de um usuário | Não |
 | GET | `/api/v1/users/me` | Obter perfil do usuário autenticado | Sim |
 | POST | `/api/v1/users` | Registrar novo usuário | Não |
+| PATCH | `/api/v1/users/:id` | Atualizar usuário (incluindo papel) | Admin |
 | PATCH | `/api/v1/users/me` | Atualizar perfil próprio | Sim |
-| PATCH | `/api/v1/users/:id/role` | Atualizar papel do usuário | Admin |
 | DELETE | `/api/v1/users/:id` | Deletar usuário | Admin |
 
 ### Filmes
@@ -402,7 +402,10 @@ A API segue o padrão REST e está versionada em **v1**. Todos os endpoints come
 | DELETE | `/api/v1/movies/:id/directors/:directorId` | Remover diretor do filme | Admin |
 | GET | `/api/v1/movies/:id/genres` | Listar gêneros de um filme | Não |
 | POST | `/api/v1/movies/:id/genres/:genreId` | Adicionar gênero ao filme | Admin |
+| PATCH | `/api/v1/movies/:id/genres/:genreId` | Atualizar gênero do filme (notas) | Admin |
 | DELETE | `/api/v1/movies/:id/genres/:genreId` | Remover gênero do filme | Admin |
+| PATCH | `/api/v1/movies/:movieId/actors/:actorId` | Atualizar ator do filme (notas) | Admin |
+| PATCH | `/api/v1/movies/:movieId/directors/:directorId` | Atualizar diretor do filme (notas) | Admin |
 
 ### Avaliações
 
@@ -429,6 +432,35 @@ A API segue o padrão REST e está versionada em **v1**. Todos os endpoints come
 ?order=createdAt:DESC # Ordenação (campo:direção)
 ?include=actor,genre # Incluir relações
 ?title=Matrix        # Filtro por título (busca parcial)
+```
+
+### Campo `notes` nas Relações
+
+Os endpoints de relação entre filmes e atores, diretores e gêneros possuem um campo **`notes`** que permite adicionar notas ou comentários descritivos sobre aquela relação específica. Este campo é útil para:
+
+- **Atores**: Adicionar informações como tipo de papel, nome do personagem, ou observações sobre a performance
+- **Diretores**: Adicionar detalhes sobre o papel de direção ou outros comentários relevantes
+- **Gêneros**: Adicionar prioridade, relevância ou observações sobre a categorização do filme
+
+#### Exemplo: Adicionar notas ao ator de um filme
+
+**Requisição:**
+
+```bash
+curl -X PATCH http://localhost:3000/api/v1/movies/1/actors/5 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer SEU_TOKEN_JWT" \
+  -d '{"notes":"Protagonista, interpretou Neo"}'
+```
+
+**Resposta:**
+
+```json
+{
+  "success": true,
+  "message": "Recurso atualizado com sucesso",
+  "affected": 1
+}
 ```
 
 ### Exemplos de Requisição e Resposta

@@ -9,12 +9,16 @@ import { Director } from '../director/entities/director.entity';
 import { Movie } from '../movie/entities/movie.entity';
 import { MovieService } from '../movie/movie.service';
 import { DirectorService } from './../director/director.service';
+import { UpdateMovieDirectorDto } from './dto/update-movie_director.dto';
+import { MovieDirector } from './entities/movie_director.entity';
 
 @Injectable()
 export class MovieDirectorService {
   constructor(
     @InjectRepository(Movie)
     private readonly movieRepository: Repository<Movie>,
+    @InjectRepository(MovieDirector)
+    private readonly movieDirectorRepository: Repository<MovieDirector>,
     private readonly movieService: MovieService,
     private readonly directorService: DirectorService,
   ) {}
@@ -55,6 +59,25 @@ export class MovieDirectorService {
 
     movie.directors = movie.directors.filter((a) => a.id !== directorId);
     return await this.movieRepository.save(movie);
+  }
+
+  async update(
+    movieId: number,
+    directorId: number,
+    updateMovieDirectorDto: UpdateMovieDirectorDto,
+  ): Promise<number> {
+    const result = await this.movieDirectorRepository.update(
+      { movieId, directorId },
+      { notes: updateMovieDirectorDto.notes ?? null },
+    );
+
+    if (!result.affected) {
+      throw new NotFoundException(
+        'Relação entre filme e diretor(a) não encontrada.',
+      );
+    }
+
+    return result.affected;
   }
 
   async relationExists(movie: Movie, directorId: number): Promise<boolean> {

@@ -11,6 +11,7 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -32,13 +33,14 @@ import { CreateMovieReviewDto } from './dto/create-movie_review.dto';
 import { ReviewResponseDto } from './dto/review-response.dto';
 import { MovieReviewService } from './movie_review.service';
 import { UpdateMovieReviewDto } from './dto/update-movie_review.dto';
+import { MovieReviewQueryDto } from './dto/queries-movie_review.dto';
 
 @ApiTags('reviews')
-@Controller({ version: '1' })
+@Controller({ version: '1', path: 'reviews' })
 export class MovieReviewController {
   constructor(private readonly movieReviewService: MovieReviewService) {}
 
-  @Post('movies/:movieId/reviews')
+  @Post()
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiBearerAuth()
@@ -48,12 +50,12 @@ export class MovieReviewController {
   @ApiResponse({ status: 401, description: 'Não autorizado' })
   @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async create(
-    @Param('movieId', ParseIntPipe) movieId: number,
     @Body() createMovieReviewDto: CreateMovieReviewDto,
     @Req() req: Request,
   ): Promise<ReviewResponseDto> {
     const user = req.user as User;
     const userId = user.id;
+    const movieId = createMovieReviewDto.movieId;
     const review = await this.movieReviewService.create(
       movieId,
       userId,
@@ -62,11 +64,60 @@ export class MovieReviewController {
     return new ReviewResponseDto(review);
   }
 
-  @Get('movies/:movieId/reviews')
-  @ApiOperation({ summary: 'Buscar todas as avaliações de um filme específico com paginação' })
-  @ApiResponse({ status: 200, description: 'Lista de avaliações recuperada com sucesso', type: PaginatedResponseDto<ReviewResponseDto> })
+  @Get()
+  @ApiOperation({
+    summary: 'Buscar avaliações - por filme (query param) ou do usuário autenticado'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de avaliações recuperada com sucesso',
+    type: PaginatedResponseDto<ReviewResponseDto>
+  })
+  @ApiResponse({ status: 401, description: 'Não autorizado (apenas se sem movieId)' })
   @ApiResponse({ status: 404, description: 'Filme não encontrado' })
   async findAll(
+    @Query() query: MovieReviewQueryDto,
+    @Req() req: Request,
+  ): Promise<PaginatedResponseDto<ReviewResponseDto>> {
+    const { page, limit, skip, take, movieId } = query;
+
+    // Se movieId for fornecido, retorna reviews do filme (público, sem guard)
+    if (movieId) {
+      const [data, total] = await this.movieReviewService.findAll(
+        movieId,
+        skip,
+        take,
+      );
+      const reviews = data.map((review) => new ReviewResponseDto(review));
+      return new PaginatedResponseDto(reviews, total, page, limit);
+    }
+
+    // Senão, retorna reviews do usuário autenticado (requer autenticação)
+    // Aplica guard manualmente aqui para rota condicional
+    if (!req.user) {
+      throw new UnauthorizedException(
+        'Para listar seus reviews, autentique-se. Ou use query param ?movieId=X para listar reviews de um filme.',
+      );
+    }
+
+    const user = req.user as User;
+    const userId = user.id;
+    const [data, total] = await this.movieReviewService.findAllByUser(
+      userId,
+      skip,
+      take,
+    );
+    const reviews = data.map((review) => new ReviewResponseDto(review));
+    return new PaginatedResponseDto(reviews, total, page, limit);
+  }
+
+  @Get('by-movie/:movieId')
+  @ApiOperation({
+    summary: 'DEPRECATED - Use GET / com query param ?movieId=:movieId para buscar reviews de um filme'
+  })
+  @ApiResponse({ status: 200, description: 'Lista de avaliações recuperada com sucesso', type: PaginatedResponseDto<ReviewResponseDto> })
+  @ApiResponse({ status: 404, description: 'Filme não encontrado' })
+  async findByMovie(
     @Param('movieId', ParseIntPipe) movieId: number,
     @Query() pagination: PaginationDto,
   ): Promise<PaginatedResponseDto<ReviewResponseDto>> {
@@ -81,31 +132,7 @@ export class MovieReviewController {
     return new PaginatedResponseDto(reviews, total, page, limit);
   }
 
-  @Get('reviews/my-reviews')
-  @Roles(RoleEnum.USER, RoleEnum.ADMIN)
-  @UseGuards(JwtAuthGuard, RoleGuard)
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Buscar todas as avaliações do usuário autenticado' })
-  @ApiResponse({ status: 200, description: 'Lista de avaliações do usuário recuperada com sucesso', type: PaginatedResponseDto<ReviewResponseDto> })
-  @ApiResponse({ status: 401, description: 'Não autorizado' })
-  async findAllByUser(
-    @Req() req: Request,
-    @Query() pagination: PaginationDto,
-  ): Promise<PaginatedResponseDto<ReviewResponseDto>> {
-    const user = req.user as User;
-    const userId = user.id;
-    const { page, limit, skip, take } = pagination;
-    const [data, total] = await this.movieReviewService.findAllByUser(
-      userId,
-      skip,
-      take,
-    );
-    const reviews = data.map((review) => new ReviewResponseDto(review));
-
-    return new PaginatedResponseDto(reviews, total, page, limit);
-  }
-
-  @Get('reviews/:id')
+  @Get(':id')
   @ApiOperation({ summary: 'Buscar uma avaliação específica por ID' })
   @ApiResponse({ status: 200, description: 'Avaliação recuperada com sucesso', type: ReviewResponseDto })
   @ApiResponse({ status: 404, description: 'Avaliação não encontrada' })
@@ -116,7 +143,7 @@ export class MovieReviewController {
     return new ReviewResponseDto(review);
   }
 
-  @Patch('reviews/:id')
+  @Patch(':id')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiBearerAuth()
@@ -141,7 +168,7 @@ export class MovieReviewController {
     return new UpdateResponseDto(result.affected);
   }
 
-  @Delete('reviews/:id')
+  @Delete(':id')
   @Roles(RoleEnum.USER, RoleEnum.ADMIN)
   @UseGuards(JwtAuthGuard, RoleGuard)
   @ApiBearerAuth()

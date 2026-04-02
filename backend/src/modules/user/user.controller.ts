@@ -110,21 +110,37 @@ export class UserController {
     return new UserResponseDto(user);
   }
 
-  @Patch(':id/role')
-  @Roles(RoleEnum.ADMIN)
+  @Patch(':id')
+  @Roles(RoleEnum.ADMIN, RoleEnum.USER)
   @UseGuards(JwtAuthGuard, RoleGuard)
+  @UseInterceptors(FileInterceptor('image', multerConfig('users')))
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Atualizar papel do usuário (apenas admin)' })
-  @ApiResponse({ status: 200, description: 'Papel do usuário atualizado com sucesso', type: UpdateResponseDto })
+  @ApiConsumes('multipart/form-data')
+  @ApiOperation({ summary: 'Atualizar um usuário (campos role apenas para admin)' })
+  @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso', type: UpdateResponseDto })
   @ApiResponse({ status: 400, description: 'Requisição inválida' })
   @ApiResponse({ status: 401, description: 'Não autorizado' })
-  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador para alterar papel' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: Pick<UpdateUserDto, 'role'>,
+    @Body() updateUserDto: UpdateUserDto,
+    @UploadedFile() image: Express.Multer.File,
+    @Req() request: Request,
   ): Promise<UpdateResponseDto> {
-    const result = await this.userService.update(id, { role: updateUserDto.role });
+    // Validar que o usuário é admin se tenta alterar role
+    if (updateUserDto.role) {
+      const user = request.user as User;
+      if (user.role !== RoleEnum.ADMIN) {
+        throw new Error('Apenas admin pode alterar o papel do usuário');
+      }
+    }
+d
+    if (image) {
+      updateUserDto.imagePath = image.path;
+    }
+
+    const result = await this.userService.update(id, updateUserDto);
     return new UpdateResponseDto(result.affected);
   }
 

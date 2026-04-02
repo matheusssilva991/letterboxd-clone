@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -20,6 +22,8 @@ import { RoleGuard } from '../../common/guards/role.guard';
 import { Director } from '../director/entities/director.entity';
 import { Movie } from '../movie/entities/movie.entity';
 import { MovieDirectorService } from './movie_director.service';
+import { UpdateMovieDirectorDto } from './dto/update-movie_director.dto';
+import { UpdateResponseDto } from '../../common/dto/success-response.dto';
 
 @ApiTags('movies')
 @Controller({ version: '1', path: 'movies' })
@@ -51,6 +55,29 @@ export class MovieDirectorController {
     @Param('movieId', ParseIntPipe) movieId: number,
   ): Promise<Director[]> {
     return this.movieDirectorService.findAll(movieId);
+  }
+
+  @Patch(':movieId/directors/:directorId')
+  @Roles(RoleEnum.ADMIN)
+  @UseGuards(JwtAuthGuard, RoleGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Atualizar informações da relação entre diretor e filme' })
+  @ApiResponse({ status: 200, description: 'Relação diretor-filme atualizada com sucesso', type: UpdateResponseDto })
+  @ApiResponse({ status: 400, description: 'Requisição inválida' })
+  @ApiResponse({ status: 401, description: 'Não autorizado' })
+  @ApiResponse({ status: 403, description: 'Proibido - Requer papel de administrador' })
+  @ApiResponse({ status: 404, description: 'Filme ou diretor não encontrado' })
+  async update(
+    @Param('movieId', ParseIntPipe) movieId: number,
+    @Param('directorId', ParseIntPipe) directorId: number,
+    @Body() updateMovieDirectorDto: UpdateMovieDirectorDto,
+  ): Promise<UpdateResponseDto> {
+    const affected = await this.movieDirectorService.update(
+      movieId,
+      directorId,
+      updateMovieDirectorDto,
+    );
+    return new UpdateResponseDto(affected);
   }
 
   @Delete(':movieId/directors/:directorId')

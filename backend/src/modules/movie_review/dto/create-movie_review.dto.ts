@@ -13,6 +13,16 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateMovieReviewDto {
   @ApiProperty({
+    description: 'ID do filme',
+    example: 1,
+  })
+  @Type(() => Number)
+  @IsInt({ message: 'ID do filme deve ser um número inteiro.' })
+  @IsPositive({ message: 'ID do filme deve ser positivo.' })
+  @IsNotEmpty({ message: 'Informe o ID do filme.' })
+  movieId: number;
+
+  @ApiProperty({
     description: 'Avaliação do filme em estrelas (1 a 5)',
     example: 5,
     minimum: 1,
