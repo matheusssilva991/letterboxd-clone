@@ -27,6 +27,9 @@ async function bootstrap() {
   // Cria a instância da aplicação NestJS a partir do módulo raiz
   const app = await NestFactory.create(AppModule);
 
+  // Confia no primeiro proxy (Nginx) para preservar IP e protocolo do cliente.
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   // Habilita CORS para o front-end, usando variável de ambiente
   app.enableCors({
     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
@@ -39,10 +42,7 @@ async function bootstrap() {
   // Configura o ClassSerializerInterceptor globalmente para excluir campos sensíveis
   // Utiliza o decorador @Exclude() nas entidades para remover campos como password
   app.useGlobalInterceptors(
-    new ClassSerializerInterceptor(app.get(Reflector), {
-      strategy: 'excludeAll',
-      excludeExtraneousValues: true,
-    }),
+    new ClassSerializerInterceptor(app.get(Reflector)),
   );
 
   // Configura o pipe global de validação para validar automaticamente todos os DTOs

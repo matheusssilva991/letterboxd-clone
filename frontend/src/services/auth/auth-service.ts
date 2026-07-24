@@ -1,22 +1,29 @@
 import axios from "axios";
-import { apiClient } from "../api-client";
-import {
+import { API_URL, apiClient } from "@/services/api-client";
+import type {
   LoginPayload,
   LoginResponse,
   RegisterPayload,
   RegisterResponse,
-} from "../../types/auth-type";
-import { env } from "@/lib/env";
+} from "@/types/auth-type";
 
-const API_URL = env.NEXT_PUBLIC_API_URL;
-
-export async function loginService(payload: LoginPayload): Promise<LoginResponse> {
-  const response = await axios.post(`${API_URL}/auth/login`, payload);
+export async function loginService(
+  payload: LoginPayload,
+): Promise<LoginResponse> {
+  const response = await axios.post<LoginResponse>(
+    `${API_URL}/auth/login`,
+    payload,
+  );
   return response.data;
 }
 
-export async function registerService(payload: RegisterPayload): Promise<RegisterResponse> {
-  const response = await axios.post(`${API_URL}/users`, payload);
+export async function registerService(
+  payload: RegisterPayload,
+): Promise<RegisterResponse> {
+  const response = await axios.post<RegisterResponse>(
+    `${API_URL}/users`,
+    payload,
+  );
   return response.data;
 }
 
@@ -35,23 +42,15 @@ export async function logoutService(): Promise<void> {
 
 export function getApiErrorMessage(error: unknown, fallback: string): string {
   if (axios.isAxiosError(error)) {
-    const payload = error.response?.data as { message?: string | string[] } | undefined;
+    const payload = error.response?.data as
+      | { message?: string | string[] }
+      | undefined;
     const message = payload?.message;
 
-    if (Array.isArray(message)) {
-      return message.join(", ");
-    }
-
-    if (typeof message === "string") {
-      return message;
-    }
-
+    if (Array.isArray(message)) return message.join(", ");
+    if (typeof message === "string") return message;
     return error.message || fallback;
   }
 
-  if (error instanceof Error) {
-    return error.message;
-  }
-
-  return fallback;
+  return error instanceof Error ? error.message : fallback;
 }

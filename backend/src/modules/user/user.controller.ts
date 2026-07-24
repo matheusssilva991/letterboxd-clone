@@ -135,7 +135,7 @@ export class UserController {
         throw new Error('Apenas admin pode alterar o papel do usuário');
       }
     }
-d
+
     if (image) {
       updateUserDto.imagePath = image.path;
     }

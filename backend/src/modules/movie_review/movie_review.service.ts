@@ -42,6 +42,7 @@ export class MovieReviewService {
       where: {
         movieId,
       },
+      relations: ['user'],
       order: { createdAt: 'DESC' },
       skip,
       take,

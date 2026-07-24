@@ -16,10 +16,11 @@ import { RedisModule } from '@nestjs-modules/ioredis';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'single',
-        url:
-          configService.get<string>('REDIS_URL') ||
-          `redis://${configService.get<string>('REDIS_HOST', 'redis')}:${configService.get<number>('REDIS_PORT', 6379)}`,
+        config: {
+          url:
+            configService.get<string>('REDIS_URL') ||
+            `redis://${configService.get<string>('REDIS_HOST', 'redis')}:${configService.get<number>('REDIS_PORT', 6379)}`,
+        },
       }),
     }),
     PassportModule.register({

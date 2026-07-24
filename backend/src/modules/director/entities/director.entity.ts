@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,11 +23,6 @@ export class Director {
   imagePath: string;
 
   @ManyToMany(() => Movie, (movie) => movie.directors)
-  @JoinTable({
-    name: 'movie_director',
-    joinColumn: { name: 'director_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'movie_id', referencedColumnName: 'id' },
-  })
   movies: Movie[];
 
   @CreateDateColumn({

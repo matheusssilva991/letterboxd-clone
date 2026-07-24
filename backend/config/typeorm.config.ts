@@ -23,7 +23,7 @@ export const typeOrmConfig: TypeOrmModuleAsyncOptions = {
     password: configService.get('MYSQL_PASSWORD'),          // Senha do banco
     database: configService.get('MYSQL_DATABASE'),          // Nome do banco de dados
     autoLoadEntities: true,                                 // Carrega automaticamente as entidades
-    synchronize: true,                                      // ATENÇÃO: Usar apenas em dev! Sincroniza schema automaticamente
-    // Em produção, use: synchronize: false e rode migrations manualmente
+    synchronize:
+      configService.get('DB_SYNCHRONIZE', 'false') === 'true',
   }),
 };

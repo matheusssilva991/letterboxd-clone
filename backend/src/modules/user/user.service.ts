@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { UpdatePasswordDto } from '../auth/dto/update-password.dto';
 import { FileService } from '../file/file.service';

@@ -23,14 +23,15 @@ Este projeto é uma réplica do Letterboxd, uma popular plataforma de descoberta
 
 ## 🚩 Status do Projeto
 
-**Em desenvolvimento ativo** - Backend funcional com API REST completa. Frontend em planejamento.
+**Em desenvolvimento ativo** - Backend NestJS e frontend Next.js funcionais.
 
 ## 🏗️ Arquitetura
 
 O projeto está organizado em módulos:
 
 - **Backend (NestJS)**: API REST com TypeScript, MySQL e Redis
-- **Frontend**: Em planejamento (React/Next.js)
+- **Frontend**: Next.js com App Router
+- **Proxy reverso**: Nginx
 
 ## 🛠️ Tecnologias
 
@@ -50,7 +51,7 @@ Antes de começar, verifique se você tem instalado:
 
 - **Docker** >= 20.10
 - **Docker Compose** >= 2.0
-- **Node.js** >= 18.x (opcional, apenas para desenvolvimento sem Docker)
+- **Node.js** >= 20.9 (opcional, apenas para desenvolvimento sem Docker)
 - **npm** ou **yarn**
 
 ## 🚀 Instalando o Letterboxd Clone
@@ -62,13 +63,7 @@ git clone https://github.com/matheusssilva991/letterboxd-clone
 cd letterboxd-clone
 ```
 
-### 2. Configure o Backend
-
-```bash
-cd letterboxd-back
-```
-
-### 3. Configure as variáveis de ambiente
+### 2. Configure as variáveis de ambiente
 
 Copie o arquivo de exemplo e configure suas variáveis:
 
@@ -78,31 +73,54 @@ cp .env.example .env
 
 Edite o arquivo `.env` com suas configurações de banco de dados, Redis, JWT, etc.
 
-### 4. Instale as dependências (se não for usar Docker)
+O arquivo `.env.example` documenta as variáveis usadas pelo Compose. O `.env`
+contém os valores reais e não deve ser versionado. Em produção, substitua todos
+os segredos de exemplo e configure `APP_ORIGIN` com o domínio HTTPS real.
+
+### 3. Instale as dependências (se não for usar Docker)
 
 ```bash
-npm install
+cd backend && npm ci
+cd ../frontend && npm ci
 ```
 
 ## ☕ Executando o Projeto
 
-### Com Docker (Recomendado)
+### Desenvolvimento com Docker
 
-O Docker Compose irá subir todos os serviços necessários (MySQL, Redis e a aplicação):
+O arquivo de desenvolvimento usa hot reload, bind mounts e publica as portas dos
+serviços:
 
 ```bash
-cd letterboxd-back
-docker-compose up -d
+docker compose -f docker-compose.dev.yml up --build
 ```
 
-A aplicação estará disponível em: `http://localhost:3000`
+A aplicação estará disponível em `http://localhost:3000` e a API em
+`http://localhost:3001/api/v1`.
+
+### Produção com Docker
+
+O Compose principal constrói imagens enxutas, mantém banco, Redis e aplicações
+sem portas públicas e expõe somente o Nginx:
+
+```bash
+cp .env.example .env
+# Edite o .env antes de continuar.
+docker compose up -d --build
+```
+
+O site estará disponível na porta definida por `HTTP_PORT` (80 por padrão).
+Para internet pública, configure TLS no Nginx ou em um load balancer à frente.
+
+> `DB_SYNCHRONIZE=false` é obrigatório em produção. Antes do primeiro deploy,
+> crie e execute migrations do TypeORM para preparar o banco.
 
 ### Sem Docker
 
 Certifique-se de ter o MySQL e Redis rodando localmente, então:
 
 ```bash
-cd letterboxd-back
+cd backend
 
 # Desenvolvimento com hot-reload
 npm run start:dev
@@ -112,19 +130,46 @@ npm run build
 npm run start:prod
 ```
 
+## 🎞️ Dados de demonstração
+
+O seed importa filmes populares, gêneros, elenco, direção e imagens do TMDB.
+Usuários e críticas são fictícios e gerados localmente. A execução é
+idempotente: rodar novamente não duplica os mesmos registros.
+
+1. Crie uma conta no TMDB e copie o **API Read Access Token** (preferível) ou
+   a **API Key v3**.
+2. Defina `TMDB_ACCESS_TOKEN` ou `TMDB_API_KEY` no `.env` da raiz.
+3. Com o ambiente de desenvolvimento em execução, rode:
+
+```bash
+docker compose -f docker-compose.dev.yml exec back npm run seed
+```
+
+Por padrão são importados até 50 filmes e criados 15 usuários e 100 críticas.
+Essas quantidades podem ser alteradas pelas variáveis `SEED_MOVIE_LIMIT`,
+`SEED_USER_COUNT` e `SEED_REVIEW_COUNT`. Todos os usuários fictícios usam a
+senha definida em `SEED_USER_PASSWORD`.
+
+Em uma imagem de produção já construída, use:
+
+```bash
+docker compose run --rm back npm run seed:prod
+```
+
 ## 📚 Documentação da API
 
 Após iniciar o servidor, você pode acessar:
 
-- **API Base**: `http://localhost:3000/api`
+- **API Base em desenvolvimento**: `http://localhost:3001/api/v1`
+- **API Base em produção**: `/api/v1` na mesma origem do site
 - **Endpoints disponíveis**:
-  - `/api/auth` - Autenticação e autorização
-  - `/api/users` - Gerenciamento de usuários
-  - `/api/movies` - Catálogo de filmes
-  - `/api/reviews` - Avaliações e críticas
-  - `/api/actors` - Atores
-  - `/api/directors` - Diretores
-  - `/api/genres` - Gêneros
+  - `/api/v1/auth` - Autenticação e autorização
+  - `/api/v1/users` - Gerenciamento de usuários
+  - `/api/v1/movies` - Catálogo de filmes
+  - `/api/v1/reviews` - Avaliações e críticas
+  - `/api/v1/actors` - Atores
+  - `/api/v1/directors` - Diretores
+  - `/api/v1/genres` - Gêneros
 
 ## 🧪 Executando os Testes
 
@@ -143,7 +188,7 @@ npm run test:cov
 
 ```
 letterboxd-clone/
-├── letterboxd-back/          # Backend NestJS
+├── backend/                  # Backend NestJS
 │   ├── config/              # Configurações (TypeORM, Cache, etc)
 │   ├── src/
 │   │   ├── common/          # Utilities compartilhados
@@ -159,8 +204,12 @@ letterboxd-clone/
 │   │   │   ├── genre/       # Gêneros
 │   │   │   └── movie_review/# Avaliações
 │   │   └── main.ts          # Entry point
-│   ├── docker-compose.yml   # Orquestração de containers
 │   └── Dockerfile           # Imagem Docker da aplicação
+├── frontend/                 # Frontend Next.js
+├── nginx/                    # Configuração do proxy reverso
+├── docker-compose.yml        # Produção
+├── docker-compose.dev.yml    # Desenvolvimento
+├── .env.example              # Modelo das variáveis
 └── README.md                # Este arquivo
 ```
 

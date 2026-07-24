@@ -1,254 +1,205 @@
 "use client";
 
-import { AuthModal } from "@/components/auth/auth-modal";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { ChevronDown, Menu, User, X } from "lucide-react";
+import { AuthModal } from "@/components/auth/auth-modal";
+import { NavLink } from "@/components/navlink/navlink";
 import { SearchBar } from "@/components/search-bar/search-bar";
-import { NavLink } from "../navlink/navlink";
-import { useAuth } from "@/hooks/auth-hook";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
-  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { User, ChevronDown, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useAuth } from "@/hooks/auth-hook";
+
+const publicLinks = [
+  { href: "/films", label: "Filmes" },
+  { href: "/people", label: "Elenco" },
+  { href: "/members", label: "Membros" },
+] as const;
 
 export function Header() {
   const { isAuthenticated, user, logout } = useAuth();
+  const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [search, setSearch] = useState("");
+
+  function submitSearch(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const title = search.trim();
+    router.push(title ? `/films?title=${encodeURIComponent(title)}` : "/films");
+    setMobileMenuOpen(false);
+  }
+
   return (
-    <header className="w-full bg-letterboxd-header-bg py-3 md:py-4 border-b border-white/5 select-none">
-      <div className="w-full lg:w-3/4 xl:w-3/5 mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-between">
-        {/* --- LOGO --- */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-3 group">
-          {/* Círculos maiores, conectados e com borda branca */}
-          <div className="flex items-center">
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-letterboxd-orange border-2 border-white"></div>
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-letterboxd-green border-2 border-white -ml-1"></div>
-            <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-letterboxd-blue border-2 border-white -ml-1"></div>
-          </div>
-          <span className="font-bold text-xl sm:text-2xl md:text-3xl tracking-wide text-white group-hover:text-gray-200 transition-colors">
+    <header className="sticky top-0 z-40 w-full border-b border-white/5 bg-letterboxd-header-bg/95 py-3 backdrop-blur md:py-4">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-3 sm:px-4 md:px-6">
+        <Link
+          href="/"
+          className="group flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-letterboxd-blue"
+          aria-label="Letterboxd — início"
+        >
+          <span className="flex items-center" aria-hidden="true">
+            <span className="h-4 w-4 rounded-full border-2 border-white bg-letterboxd-orange sm:h-5 sm:w-5" />
+            <span className="-ml-1 h-4 w-4 rounded-full border-2 border-white bg-letterboxd-green sm:h-5 sm:w-5" />
+            <span className="-ml-1 h-4 w-4 rounded-full border-2 border-white bg-letterboxd-blue sm:h-5 sm:w-5" />
+          </span>
+          <span className="text-xl font-bold tracking-wide text-white transition-colors group-hover:text-gray-200 sm:text-2xl md:text-3xl">
             Letterboxd
           </span>
         </Link>
 
-        {/* --- NAVEGAÇÃO E BUSCA --- */}
-        <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
-          {/* Botão Menu Hambúrguer (Mobile) */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden text-letterboxd-label hover:text-white transition-colors p-2"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-
-          {/* Links de Navegação (Desktop) */}
-          <nav className="hidden md:flex items-center gap-3 sm:gap-4 md:gap-5">
+        <div className="flex items-center gap-2 md:gap-5">
+          <nav className="hidden items-center gap-4 md:flex" aria-label="Principal">
             {!isAuthenticated ? (
               <AuthModal>
                 <button
                   type="button"
-                  className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-letterboxd-label hover:text-white transition-colors bg-transparent border-none outline-none cursor-pointer whitespace-nowrap"
+                  className="whitespace-nowrap text-xs font-bold uppercase tracking-widest text-letterboxd-label transition-colors hover:text-white"
                 >
-                  <span className="hidden sm:inline">Sign In / Sign Up</span>
-                  <span className="sm:hidden">Sign In</span>
+                  Entrar / Criar conta
                 </button>
               </AuthModal>
             ) : (
               <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                 <DropdownMenuTrigger asChild>
                   <button
-                    className={`outline-none flex items-center gap-2 px-2 py-1 rounded transition-all group ${
-                      dropdownOpen
-                        ? "text-white"
-                        : "text-[#99AABB] hover:text-white"
-                    }`}
+                    type="button"
+                    className="flex items-center gap-2 rounded px-2 py-1 text-letterboxd-label transition hover:text-white"
                   >
-                    <Avatar className="w-6 h-6">
+                    <Avatar className="h-6 w-6">
                       <AvatarFallback className="bg-transparent text-current">
-                        <User className="w-4 h-4" />
+                        <User className="h-4 w-4" aria-hidden="true" />
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-xs font-bold uppercase tracking-widest">
-                      {user?.username ?? "USER"}
+                    <span className="max-w-28 truncate text-xs font-bold uppercase tracking-widest">
+                      {user?.username ?? "Perfil"}
                     </span>
-                    <ChevronDown className="w-3 h-3 opacity-50 group-hover:opacity-100" />
+                    <ChevronDown className="h-3 w-3" aria-hidden="true" />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  align="end"
-                  sideOffset={0}
-                  className="w-48 border-none p-0"
-                >
-                  <div className="py-1">
-                    <DropdownMenuItem asChild>
-                      <Link href="/">Home</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile">Profile</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/films">Films</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/diary">Diary</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/reviews">Reviews</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/watchlist">Watchlist</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/lists">Lists</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/likes">Likes</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/tags">Tags</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/network">Network</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/settings">Settings</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/subscriptions">Subscriptions</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={logout}>
-                      Sign Out
-                    </DropdownMenuItem>
-                  </div>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">Meu perfil</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/reviews">Minhas avaliações</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => void logout()}>
+                    Sair
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-            <NavLink href="/films">Films</NavLink>
-            <NavLink href="/lists" className="hidden sm:inline-block">
-              Lists
-            </NavLink>
-            <NavLink href="/members" className="hidden md:inline-block">
-              Members
-            </NavLink>
-            <NavLink href="/journal" className="hidden md:inline-block">
-              Journal
-            </NavLink>
+            {publicLinks.map((link) => (
+              <NavLink key={link.href} href={link.href}>
+                {link.label}
+              </NavLink>
+            ))}
           </nav>
-          {/* --- BARRA DE BUSCA --- */}
-          <SearchBar placeholder="Search..." />
+
+          <form onSubmit={submitSearch}>
+            <label htmlFor="header-search" className="sr-only">
+              Buscar filmes
+            </label>
+            <SearchBar
+              id="header-search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar filmes..."
+            />
+          </form>
+
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            className="p-2 text-letterboxd-label transition-colors hover:text-white md:hidden"
+            aria-label={mobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+          >
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" aria-hidden="true" />
+            ) : (
+              <Menu className="h-6 w-6" aria-hidden="true" />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Menu Mobile */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-letterboxd-modal border-t border-white/10">
-          <nav className="flex flex-col py-2">
-            {!isAuthenticated ? (
-              <AuthModal>
-                <button
-                  type="button"
-                  className="text-left px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Sign In / Sign Up
-                </button>
-              </AuthModal>
-            ) : (
-              <>
-                <Link
-                  href="/profile"
-                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {user?.username ?? "Profile"}
-                </Link>
-                <div className="border-t border-white/10 my-1"></div>
-              </>
-            )}
+      {mobileMenuOpen ? (
+        <nav
+          id="mobile-navigation"
+          className="mt-3 border-t border-white/10 bg-letterboxd-modal px-4 py-3 md:hidden"
+          aria-label="Menu móvel"
+        >
+          <form onSubmit={submitSearch} className="mb-2 sm:hidden">
+            <SearchBar
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Buscar filmes..."
+              wrapperClassName="relative block"
+              inputClassName="h-10 w-full rounded-full bg-letterboxd-input px-4 pr-10 text-sm text-[#26333d] outline-none focus:bg-white"
+            />
+          </form>
+          {!isAuthenticated ? (
+            <AuthModal>
+              <button
+                type="button"
+                className="block w-full px-2 py-3 text-left text-sm font-bold uppercase tracking-wide text-white"
+              >
+                Entrar / Criar conta
+              </button>
+            </AuthModal>
+          ) : (
+            <>
+              <Link
+                href="/profile"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-2 py-3 text-sm font-bold uppercase tracking-wide text-white"
+              >
+                Meu perfil
+              </Link>
+              <Link
+                href="/reviews"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block px-2 py-3 text-sm font-bold uppercase tracking-wide text-white"
+              >
+                Minhas avaliações
+              </Link>
+            </>
+          )}
+          {publicLinks.map((link) => (
             <Link
-              href="/films"
-              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
+              key={link.href}
+              href={link.href}
               onClick={() => setMobileMenuOpen(false)}
+              className="block px-2 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white"
             >
-              Films
+              {link.label}
             </Link>
-            <Link
-              href="/lists"
-              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
+          ))}
+          {isAuthenticated ? (
+            <button
+              type="button"
+              onClick={() => {
+                void logout();
+                setMobileMenuOpen(false);
+              }}
+              className="block w-full border-t border-white/10 px-2 py-3 text-left text-sm font-bold uppercase tracking-wide text-letterboxd-label"
             >
-              Lists
-            </Link>
-            <Link
-              href="/members"
-              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Members
-            </Link>
-            <Link
-              href="/journal"
-              className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              Journal
-            </Link>
-            {isAuthenticated && (
-              <>
-                <div className="border-t border-white/10 my-1"></div>
-                <Link
-                  href="/diary"
-                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Diary
-                </Link>
-                <Link
-                  href="/reviews"
-                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Reviews
-                </Link>
-                <Link
-                  href="/watchlist"
-                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Watchlist
-                </Link>
-                <Link
-                  href="/settings"
-                  className="px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Settings
-                </Link>
-                <button
-                  onClick={() => {
-                    void logout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="text-left px-6 py-3 text-sm font-bold uppercase tracking-wide text-letterboxd-label hover:text-white hover:bg-white/5 transition-colors"
-                >
-                  Sign Out
-                </button>
-              </>
-            )}
-          </nav>
-        </div>
-      )}
+              Sair
+            </button>
+          ) : null}
+        </nav>
+      ) : null}
     </header>
   );
 }

@@ -7,29 +7,23 @@
  * - Validar usuários autenticados
  */
 
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import Redis from 'ioredis';
 import { GeneratedToken, JwtPayload } from '../../common/types/auth.types';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { LoginUserDto } from './dto/login-user.dto';
-import {
-  Injectable,
-  UnauthorizedException,
-  BadRequestException,
-  Logger,
-} from '@nestjs/common';
-import { InjectRedis } from '@nestjs-modules/ioredis';
-import Redis from 'ioredis';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly userService: UserService,
-    private readonly configService: ConfigService,
-  ) {}
   private readonly logger = new Logger(AuthService.name);
   private readonly MAX_LOGIN_ATTEMPTS = 5;
   private readonly LOCK_TIME = 15 * 60; // 15 minutos em segundos

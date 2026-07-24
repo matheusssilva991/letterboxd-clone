@@ -1,40 +1,31 @@
-# Estágio de construção
+FROM node:20-alpine AS dependencies
+
+WORKDIR /usr/app
+COPY package*.json ./
+RUN npm ci
+
 FROM node:20-alpine AS builder
 
 WORKDIR /usr/app
-
-# Copiar arquivos de dependências
-COPY package*.json ./
-
-# Instalar todas as dependências (incluindo dev)
-RUN npm ci
-
-# Copiar código fonte
+COPY --from=dependencies /usr/app/node_modules ./node_modules
 COPY . .
-
-# Build da aplicação
 RUN npm run build
 
-# Estágio de produção
-FROM node:20-alpine
+FROM node:20-alpine AS runner
 
 WORKDIR /usr/app
+ENV NODE_ENV=production
+ENV PORT=3001
 
-# Copiar package.json
 COPY package*.json ./
+RUN npm ci --omit=dev \
+    && npm cache clean --force
 
-# Instalar todas as dependências (nest precisa estar disponível)
-RUN npm ci
+COPY --from=builder --chown=node:node /usr/app/dist ./dist
+RUN mkdir -p /usr/app/uploads \
+    && chown node:node /usr/app/uploads
 
-# Copiar o build do estágio anterior
-COPY --from=builder /usr/app/dist ./dist
-
-# Copiar arquivos de configuração necessários
-COPY --from=builder /usr/app/tsconfig.json ./
-COPY --from=builder /usr/app/nest-cli.json ./
-
-# Expor a porta
+USER node
 EXPOSE 3001
 
-# Comando para iniciar (produção)
-CMD ["npm", "run", "start:prod"]
+CMD ["node", "dist/src/main.js"]

@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -18,11 +17,6 @@ export class Genre {
   name: string;
 
   @ManyToMany(() => Movie, (movie) => movie.genres)
-  @JoinTable({
-    name: 'movie_genre',
-    joinColumn: { name: 'genre_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'movie_id', referencedColumnName: 'id' },
-  })
   movies: Movie[];
 
   // Diz em que momento o registro foi criado

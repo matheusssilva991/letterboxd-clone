@@ -41,7 +41,9 @@ import { UserModule } from './modules/user/user.module';
     // Configuração global de variáveis de ambiente
     ConfigModule.forRoot({
       isGlobal: true, // Disponibiliza o ConfigService em toda a aplicação
-      envFilePath: '.env', // Caminho do arquivo de configuração
+      // Usa o arquivo local se existir e completa com o .env da raiz ao rodar
+      // diretamente pela pasta backend. No Docker, as variáveis vêm do Compose.
+      envFilePath: ['.env', '../.env'],
     }),
 
     // Configuração do TypeORM (banco de dados MySQL)
